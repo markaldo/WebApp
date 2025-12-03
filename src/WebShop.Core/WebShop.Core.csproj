@@ -11,8 +11,4 @@
     <ProjectReference Include="..\WebShop.MVC\WebShop.MVC.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-
 </Project>
