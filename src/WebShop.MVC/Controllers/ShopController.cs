@@ -6,7 +6,7 @@ namespace WebShop.MVC.Controllers
     public class ShopController : Controller
     {
         private readonly ILogger<ShopController> _logger;
-        // TODO: IProductService, ICartService, IOrderService
+        // TODO: inject services as needed, e.g. IProductService, ICartService, IOrderService
         // private readonly IProductService _products;
         // private readonly ICartService _cart;
         public ShopController(ILogger<ShopController> logger /*, IProductService products, ICartService cart */)
@@ -17,8 +17,8 @@ namespace WebShop.MVC.Controllers
         }
 
         // Optional landing page -> Views/Shop/Index.cshtml (e.g., product list)
-        // [HttpGet]
-        public IActionResult ProductDetails()
+        [HttpGet]
+        public IActionResult Index()
         {
             // var model = _products.GetFeaturedOrAll();
             return View();
@@ -26,8 +26,8 @@ namespace WebShop.MVC.Controllers
 
         // GET: /Shop/Product/123 or /Shop/Product?id=123
         // Maps to Views/Shop/Product.cshtml (from shop-product-full.html)
-        // [HttpGet]
-        /* public IActionResult ProductDetails(int? id)
+        [HttpGet]
+        public IActionResult Product(int? id)
         {
             if (id == null)
             {
@@ -40,11 +40,11 @@ namespace WebShop.MVC.Controllers
             // return View(product);
 
             return View();
-        }*/
+        }
 
         // GET: /Shop/Cart
         // Maps to Views/Shop/Cart.cshtml (from shop-cart.html)
-        // [HttpGet]
+        [HttpGet]
         public IActionResult Cart()
         {
             // var cart = _cart.GetForUser(User);
@@ -53,8 +53,8 @@ namespace WebShop.MVC.Controllers
         }
 
         // POST: /Shop/Cart/Add
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddToCart(int productId, int quantity = 1)
         {
             // if (quantity < 1) quantity = 1;
@@ -63,8 +63,8 @@ namespace WebShop.MVC.Controllers
         }
 
         // POST: /Shop/Cart/Update
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateCart(int productId, int quantity)
         {
             // _cart.Update(User, productId, quantity);
@@ -72,7 +72,7 @@ namespace WebShop.MVC.Controllers
         }
 
         // POST: /Shop/Cart/Remove
-        //[HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult RemoveFromCart(int productId)
         {
@@ -82,7 +82,7 @@ namespace WebShop.MVC.Controllers
 
         // GET: /Shop/Wishlist
         // Maps to Views/Shop/Wishlist.cshtml (from shop-wishlist.html)
-        // [HttpGet]
+        [HttpGet]
         public IActionResult Wishlist()
         {
             // var wishlist = _products.GetWishlist(User);
@@ -91,8 +91,8 @@ namespace WebShop.MVC.Controllers
         }
 
         // POST: /Shop/Wishlist/Add
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddToWishlist(int productId)
         {
             // _products.AddToWishlist(User, productId);
@@ -100,8 +100,8 @@ namespace WebShop.MVC.Controllers
         }
 
         // POST: /Shop/Wishlist/Remove
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult RemoveFromWishlist(int productId)
         {
             // _products.RemoveFromWishlist(User, productId);
@@ -110,7 +110,7 @@ namespace WebShop.MVC.Controllers
 
         // GET: /Shop/Checkout
         // Maps to Views/Shop/Checkout.cshtml (from shop-checkout.html)
-        // [HttpGet]
+        [HttpGet]
         public IActionResult Checkout()
         {
             // var model = _cart.GetCheckoutModel(User);
@@ -119,9 +119,9 @@ namespace WebShop.MVC.Controllers
         }
 
         // POST: /Shop/Checkout
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public IActionResult Checkout(/* CheckoutViewModel model */)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        //public IActionResult Checkout(/* CheckoutViewModel model */)
         /*{
             // if (!ModelState.IsValid) return View(model);
             // var orderId = _cart.PlaceOrder(User, model);
@@ -130,7 +130,7 @@ namespace WebShop.MVC.Controllers
         }*/
 
         // GET: /Shop/OrderConfirmation/1001
-        // [HttpGet]
+        [HttpGet]
         public IActionResult OrderConfirmation(int id)
         {
             // var order = _orders.GetByIdForUser(User, id);

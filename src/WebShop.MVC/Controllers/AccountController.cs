@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace WebShop.MVC.Controllers
@@ -13,7 +14,7 @@ namespace WebShop.MVC.Controllers
         }
 
         // GET: /Account/Index   -> Views/Account/Index.cshtml (page-account)
-        public IActionResult Account()
+        public IActionResult Index()
         {
             return View();
         }
@@ -26,8 +27,8 @@ namespace WebShop.MVC.Controllers
         }
 
         // POST: /Account/Login
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         //public IActionResult Login(/* LoginViewModel model */)
         /*{
             // TODO: validate credentials and sign user in
@@ -37,15 +38,15 @@ namespace WebShop.MVC.Controllers
         }*/
 
         // GET: /Account/Register   -> Views/Account/Register.cshtml (page-register)
-        // [HttpGet]
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
         // POST: /Account/Register
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         //public IActionResult Register(/* RegisterViewModel model */)
         /*{
             // TODO: create user account
@@ -55,15 +56,15 @@ namespace WebShop.MVC.Controllers
         }*/
 
         // GET: /Account/ForgotPassword   -> Views/Account/ForgotPassword.cshtml
-        // [HttpGet]
+        [HttpGet]
         public IActionResult ForgotPassword()
         {
             return View();
         }
 
         // POST: /Account/ForgotPassword
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         // public IActionResult ForgotPassword(/* ForgotPasswordViewModel model */)
         /*{
             // TODO: send reset link
@@ -71,14 +72,14 @@ namespace WebShop.MVC.Controllers
         }*/
 
         // GET: /Account/ForgotPasswordConfirmation
-        // [HttpGet]
-        public IActionResult Reset()
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
         {
             return View();
         }
 
         // GET: /Account/ResetPassword   -> Views/Account/ResetPassword.cshtml
-        // [HttpGet]
+        [HttpGet]
         public IActionResult ResetPassword(string token, string email)
         {
             // pass token/email to view if needed
@@ -86,19 +87,19 @@ namespace WebShop.MVC.Controllers
         }
 
         // POST: /Account/ResetPassword
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ResetPassword(/* ResetPasswordViewModel model */)
         {
             // TODO: reset password
             return RedirectToAction("Login");
         }
 
-        // GET: /Account/PrivacyPolicy   -> Views/Account/Privacy.cshtml
-        // [HttpGet]
-        public IActionResult Privacy()
+        // GET: /Account/PrivacyPolicy   -> Views/Account/PrivacyPolicy.cshtml
+        [HttpGet]
+        public IActionResult PrivacyPolicy()
         {
-            return RedirectToAction("Privacy", "Home");
+            return View();
         }
 
         // GET: /Account/Logout
