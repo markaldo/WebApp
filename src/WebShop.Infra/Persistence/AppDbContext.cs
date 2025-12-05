@@ -17,6 +17,13 @@ namespace WebShop.Infra.Persistence
         public DbSet<Product> Products { get; set; }    
         public DbSet<ProductCategory> Categories { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Call your combined configuration
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+        }
 
     }
 }
