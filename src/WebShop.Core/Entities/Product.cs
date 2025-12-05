@@ -3,13 +3,11 @@
 {   
     public class Product
     {
-        public int Id { get; set; }                 // PK
-        public string ProductName { get; set; } = null!;   // "Seeds of Change Organic Quinoe"
-        public decimal Price { get; set; }         // 28.85
-        public string ImageUrl { get; set; } = null!;
+        public int Id { get; set; }           
+        public string ProductName { get; set; } 
+        public decimal Price { get; set; }      
+        public string ImageUrl { get; set; }
         public DateTime CreateUtc { get; set; }
-
-        // Category
         public int ProductCategoryId { get; set; }
         public ProductCategory Category { get; set; } 
 

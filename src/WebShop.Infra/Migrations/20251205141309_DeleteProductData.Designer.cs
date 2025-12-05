@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebShop.Infra.Persistence;
 
@@ -11,9 +12,11 @@ using WebShop.Infra.Persistence;
 namespace WebShop.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251205141309_DeleteProductData")]
+    partial class DeleteProductData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,7 +89,7 @@ namespace WebShop.Infra.Migrations
                         {
                             Id = 4,
                             CreateUtc = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ImageUrl = "~/assets/imgs/shop/4.jpg",
+                            ImageUrl = "~/assets/imgs/shop/7.jpg",
                             Price = 45.00m,
                             ProductCategoryId = 1,
                             ProductName = "Webcam HD 1080p"
@@ -95,7 +98,7 @@ namespace WebShop.Infra.Migrations
                         {
                             Id = 5,
                             CreateUtc = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ImageUrl = "~/assets/imgs/shop/5.jpg",
+                            ImageUrl = "~/assets/imgs/shop/8.jpg",
                             Price = 129.00m,
                             ProductCategoryId = 1,
                             ProductName = "Portable SSD 1TB"
@@ -104,7 +107,7 @@ namespace WebShop.Infra.Migrations
                         {
                             Id = 6,
                             CreateUtc = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ImageUrl = "~/assets/imgs/shop/6.jpg",
+                            ImageUrl = "~/assets/imgs/shop/9.jpg",
                             Price = 299.99m,
                             ProductCategoryId = 2,
                             ProductName = "Standing Desk"
@@ -113,7 +116,7 @@ namespace WebShop.Infra.Migrations
                         {
                             Id = 7,
                             CreateUtc = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ImageUrl = "~/assets/imgs/shop/7.jpg",
+                            ImageUrl = "~/assets/imgs/shop/10.jpg",
                             Price = 89.99m,
                             ProductCategoryId = 2,
                             ProductName = "Bookshelf Wooden"
@@ -122,7 +125,7 @@ namespace WebShop.Infra.Migrations
                         {
                             Id = 8,
                             CreateUtc = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ImageUrl = "~/assets/imgs/shop/8.jpg",
+                            ImageUrl = "~/assets/imgs/shop/11.jpg",
                             Price = 25.99m,
                             ProductCategoryId = 3,
                             ProductName = "Table Lamp LED"
@@ -131,7 +134,7 @@ namespace WebShop.Infra.Migrations
                         {
                             Id = 9,
                             CreateUtc = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ImageUrl = "~/assets/imgs/shop/9.jpg",
+                            ImageUrl = "~/assets/imgs/shop/12.jpg",
                             Price = 19.99m,
                             ProductCategoryId = 3,
                             ProductName = "Comfort Footrest"

@@ -54,77 +54,52 @@ namespace WebShop.Infra.Persistence
                     new Product
                     {
                         Id = 4,
-                        ProductName = "Monitor 24 Inch",
-                        Price = 199.00m,
+                        ProductName = "Webcam HD 1080p",
+                        Price = 45.00m,
                         ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/4.jpg",
+                        ImageUrl = "~/assets/imgs/shop/4.jpg"
                     },
                     new Product
                     {
                         Id = 5,
-                        ProductName = "Keyboard Mechanical",
-                        Price = 59.99m,
-                        ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/5.jpg"
-                    },
-                    new Product
-                    {
-                        Id = 6,
-                        ProductName = "Keyboard Mechanical",
-                        Price = 59.99m,
-                        ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/5.jpg"
-                    },
-
-                    new Product
-                    {
-                        Id = 7,
-                        ProductName = "Webcam HD 1080p",
-                        Price = 45.00m,
-                        ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/7.jpg"
-                    },
-                    new Product
-                    {
-                        Id = 8,
                         ProductName = "Portable SSD 1TB",
                         Price = 129.00m,
                         ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/8.jpg"
+                        ImageUrl = "~/assets/imgs/shop/5.jpg"
                     },
 
                     // Furniture category
                     new Product
                     {
-                        Id = 9,
+                        Id = 6,
                         ProductName = "Standing Desk",
                         Price = 299.99m,
                         ProductCategoryId = 2,
-                        ImageUrl = "~/assets/imgs/shop/9.jpg"
+                        ImageUrl = "~/assets/imgs/shop/6.jpg"
                     },
                     new Product
                     {
-                        Id = 10,
+                        Id = 7,
                         ProductName = "Bookshelf Wooden",
                         Price = 89.99m,
                         ProductCategoryId = 2,
-                        ImageUrl = "~/assets/imgs/shop/10.jpg"
+                        ImageUrl = "~/assets/imgs/shop/7.jpg"
                     },
                     new Product
                     {
-                        Id = 11,
+                        Id = 8,
                         ProductName = "Table Lamp LED",
                         Price = 25.99m,
-                        ProductCategoryId = 2,
-                        ImageUrl = "~/assets/imgs/shop/11.jpg"
+                        ProductCategoryId = 3,
+                        ImageUrl = "~/assets/imgs/shop/8.jpg"
                     },
                     new Product
                     {
-                        Id = 12,
+                        Id = 9,
                         ProductName = "Comfort Footrest",
                         Price = 19.99m,
-                        ProductCategoryId = 2,
-                        ImageUrl = "~/assets/imgs/shop/12.jpg"
+                        ProductCategoryId = 3,
+                        ImageUrl = "~/assets/imgs/shop/9.jpg"
                     }
             );
         }

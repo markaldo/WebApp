@@ -1,11 +1,18 @@
 using Microsoft.EntityFrameworkCore;
+using WebShop.Core.Repositories;
 using WebShop.Infra.Persistence;
+using WebShop.Infra.Repositories;
+using WebShop.MVC.Interfaces;
+using WebShop.MVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductServices>();
+
 
 
 var app = builder.Build();

@@ -1,5 +1,6 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using WebShop.MVC.Interfaces;
 using WebShop.MVC.Models;
 
 namespace WebShop.MVC.Controllers
@@ -7,15 +8,19 @@ namespace WebShop.MVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IProductService _services;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, IProductService productServices)
         {
             _logger = logger;
+            this._services = productServices;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var products = await _services.GetAllProduct();
+            return View(model: products);
         }
 
         public IActionResult Privacy()
