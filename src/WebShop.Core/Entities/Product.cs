@@ -1,14 +1,19 @@
-﻿namespace WebShop.MVC.Models.Entities
-{
+﻿namespace WebShop.Core.Entities
+
+{   
     public class Product
     {
         public int Id { get; set; }                 // PK
         public string ProductName { get; set; } = null!;   // "Seeds of Change Organic Quinoe"
         public decimal Price { get; set; }         // 28.85
+        public string ImageUrl { get; set; } = null!;
+        public DateTime CreateUtc { get; set; }
 
         // Category
         public int ProductCategoryId { get; set; }
         public ProductCategory Category { get; set; } = null!;
+
+
 
         /* public string? UrlSlug { get; set; }          // "seeds-of-change-organic-quinoa"
 
@@ -25,7 +30,7 @@
         public int RatingCount { get; set; }       // optional, number of reviews
 
         // Images
-        public string ImageUrl { get; set; } = null!;        // "assets/imgs/shop/product-1-1.jpg"
+        
         public string? HoverImageUrl { get; set; }           // "assets/imgs/shop/product-1-2.jpg"
 
         // Badges shown on cards ("Hot", "Sale", "New", "-14%")
