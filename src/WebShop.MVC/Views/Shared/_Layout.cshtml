@@ -1,6 +1,5 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +15,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="~/imgs/theme/favicon.svg" />
     <!-- Template CSS -->
-    <link rel="stylesheet" href="~/assets/css/plugins/slider-range.assets/" />
+    <link rel="stylesheet" href="~/assets/css/plugins/slider-range.css" />
     <link rel="stylesheet" href="~/assets/css/main.css?v=5.3" />
     <!--<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />-->
     <!--<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> -->
@@ -33,9 +32,9 @@
                     <div class="col-xl-3 col-lg-4">
                         <div class="header-info">
                             <ul>
-                                <li><a asp-controller="Account" asp-action="Index">My Account</a></li>
+                                <li><a asp-controller="Account" asp-action="Account">My Account</a></li>
                                 <li><a asp-controller="Shop" asp-action="Wishlist">Wishlist</a></li>
-                                <li><a asp-controller="Shop" asp-action="Index">Order Tracking</a></li>
+                                <li><a asp-controller="Shop" asp-action="Checkout">Checkout</a></li>
                                 <li><a href="shop-order.html">Order Tracking</a></li>
                             </ul>
                         </div>
@@ -73,13 +72,13 @@
                                     <a class="language-dropdown-active" href="#">USD <i class="fi-rs-angle-small-down"></i></a>
                                     <ul class="language-dropdown">
                                         <li>
-                                            <a href="#"><img src="/assets/imgs/theme/flag-fr.png" alt="" />INR</a>
+                                            <a href="#"><img src="~/assets/imgs/theme/flag-fr.png" alt="" />INR</a>
                                         </li>
                                         <li>
-                                            <a href="#"><img src="/assets/imgs/theme/flag-dt.png" alt="" />MBP</a>
+                                            <a href="#"><img src="~/assets/imgs/theme/flag-dt.png" alt="" />MBP</a>
                                         </li>
                                         <li>
-                                            <a href="#"><img src="/assets/imgs/theme/flag-ru.png" alt="" />EU</a>
+                                            <a href="#"><img src="~/assets/imgs/theme/flag-ru.png" alt="" />EU</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -93,7 +92,7 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <a href="index.html"><img src="/assets/imgs/theme/logo.svg" alt="logo" /></a>
+                        <a asp-controller="Home" asp-action="Index"><img src="~/assets/imgs/theme/logo.svg" alt="logo" /></a>
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -144,15 +143,15 @@
                                     <a href="shop-compare.html"><span class="lable ml-0">Compare</span></a>
                                 </div> -->
                                 <div class="header-action-icon-2">
-                                    <a href="shop-wishlist.html">
-                                        <img class="svgInject" alt="Nest" src="/assets/imgs/theme/icons/icon-heart.svg" />
+                                    <a asp-controller="Shop" asp-action="Wishlist">
+                                        <img class="svgInject" alt="Nest" src="~/assets/imgs/theme/icons/icon-heart.svg" />
                                         <span class="pro-count blue">6</span>
                                     </a>
-                                    <a href="shop-wishlist.html"><span class="lable">Wishlist</span></a>
+                                    <a asp-controller="Shop" asp-action="Wishlist"><span class="lable">Wishlist</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" asp-controller="Shop" asp-action="Cart">
-                                        <img alt="Nest" src="/assets/imgs/theme/icons/icon-cart.svg" />
+                                        <img alt="Nest" src="~/assets/imgs/theme/icons/icon-cart.svg" />
                                         <span class="pro-count blue">2</span>
                                     </a>
                                     <a asp-controller="Shop" asp-action="Cart"><span class="lable">Cart</span></a>
@@ -160,7 +159,7 @@
                                         <ul>
                                             <li>
                                                 <div class="shopping-cart-img">
-                                                    <a asp-controller="Shop" asp-action="Product"><img alt="Nest" src="/assets/imgs/shop/thumbnail-3.jpg" /></a>
+                                                    <a asp-controller="Shop" asp-action="Product"><img alt="Nest" src="~/assets/imgs/shop/thumbnail-3.jpg" /></a>
                                                 </div>
                                                 <div class="shopping-cart-title">
                                                     <h4><a asp-controller="Shop" asp-action="Product">Daisy Casual Bag</a></h4>
@@ -172,7 +171,7 @@
                                             </li>
                                             <li>
                                                 <div class="shopping-cart-img">
-                                                    <a asp-controller="Shop" asp-action="Product"><img alt="Nest" src="/assets/imgs/shop/thumbnail-2.jpg" /></a>
+                                                    <a asp-controller="Shop" asp-action="Product"><img alt="Nest" src="~/assets/imgs/shop/thumbnail-2.jpg" /></a>
                                                 </div>
                                                 <div class="shopping-cart-title">
                                                     <h4><a asp-controller="Shop" asp-action="Product">Corduroy Shirts</a></h4>
@@ -195,17 +194,17 @@
                                     </div>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a href="page-account.html">
-                                        <img class="svgInject" alt="Nest" src="/assets/imgs/theme/icons/icon-user.svg" />
+                                    <a asp-controller="Account" asp-action="Account">
+                                        <img class="svgInject" alt="Nest" src="~/assets/imgs/theme/icons/icon-user.svg" />
                                     </a>
-                                    <a href="page-account.html"><span class="lable ml-0">Account</span></a>
+                                    <a asp-controller="Account" asp-action="Account"><span class="lable ml-0">Account</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                         <ul>
-                                            <li><a href="page-account.html"><i class="fi fi-rs-user mr-10"></i>My Account</a></li>
-                                            <li><a href="page-account.html"><i class="fi fi-rs-location-alt mr-10"></i>Order Tracking</a></li>
-                                            <li><a href="page-account.html"><i class="fi fi-rs-label mr-10"></i>My Voucher</a></li>
-                                            <li><a href="shop-wishlist.html"><i class="fi fi-rs-heart mr-10"></i>My Wishlist</a></li>
-                                            <li><a href="page-account.html"><i class="fi fi-rs-settings-sliders mr-10"></i>Setting</a></li>
+                                            <li><a asp-controller="Account" asp-action="Account"><i class="fi fi-rs-user mr-10"></i>My Account</a></li>
+                                            <li><a asp-controller="Home" asp-action="Index"><i class="fi fi-rs-location-alt mr-10"></i>Order Tracking</a></li>
+                                            <li><a asp-controller="Home" asp-action="Index"><i class="fi fi-rs-label mr-10"></i>My Voucher</a></li>
+                                            <li><a asp-controller="Shop" asp-action="Wishlist"><i class="fi fi-rs-heart mr-10"></i>My Wishlist</a></li>
+                                            <li><a asp-controller="Account" asp-action="Account"><i class="fi fi-rs-settings-sliders mr-10"></i>Setting</a></li>
                                             <li><a asp-controller="Account" asp-action="Login"><i class="fi fi-rs-sign-out mr-10"></i>Sign out</a></li>
                                         </ul>
                                     </div>
@@ -231,7 +230,7 @@
                     <div class="col-lg-1-5 col-md-4 col-12 col-sm-6 mb-md-4 mb-xl-0">
                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                             <div class="banner-icon">
-                                <img src="assets/imgs/theme/icons/icon-1.svg" alt="" />
+                                <img src="~/assets/imgs/theme/icons/icon-1.svg" alt="" />
                             </div>
                             <div class="banner-text">
                                 <h3 class="icon-box-title">Best prices & offers</h3>
@@ -242,7 +241,7 @@
                     <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                             <div class="banner-icon">
-                                <img src="assets/imgs/theme/icons/icon-2.svg" alt="" />
+                                <img src="~/assets/imgs/theme/icons/icon-2.svg" alt="" />
                             </div>
                             <div class="banner-text">
                                 <h3 class="icon-box-title">Free delivery</h3>
@@ -253,7 +252,7 @@
                     <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                             <div class="banner-icon">
-                                <img src="assets/imgs/theme/icons/icon-3.svg" alt="" />
+                                <img src="~/assets/imgs/theme/icons/icon-3.svg" alt="" />
                             </div>
                             <div class="banner-text">
                                 <h3 class="icon-box-title">Great daily deal</h3>
@@ -264,7 +263,7 @@
                     <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                             <div class="banner-icon">
-                                <img src="assets/imgs/theme/icons/icon-4.svg" alt="" />
+                                <img src="~/assets/imgs/theme/icons/icon-4.svg" alt="" />
                             </div>
                             <div class="banner-text">
                                 <h3 class="icon-box-title">Wide assortment</h3>
@@ -275,7 +274,7 @@
                     <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                             <div class="banner-icon">
-                                <img src="assets/imgs/theme/icons/icon-5.svg" alt="" />
+                                <img src="~/assets/imgs/theme/icons/icon-5.svg" alt="" />
                             </div>
                             <div class="banner-text">
                                 <h3 class="icon-box-title">Easy returns</h3>
@@ -286,7 +285,7 @@
                     <div class="col-lg-1-5 col-md-4 col-12 col-sm-6 d-xl-none">
                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                             <div class="banner-icon">
-                                <img src="assets/imgs/theme/icons/icon-6.svg" alt="" />
+                                <img src="~/assets/imgs/theme/icons/icon-6.svg" alt="" />
                             </div>
                             <div class="banner-text">
                                 <h3 class="icon-box-title">Safe delivery</h3>
@@ -303,14 +302,14 @@
                     <div class="col">
                         <div class="widget-about font-md mb-md-3 mb-lg-3 mb-xl-0">
                             <div class="logo mb-30">
-                                <a href="index.html" class="mb-15"><img src="assets/imgs/theme/logo.svg" alt="logo" /></a>
+                                <a asp-controller="Home" asp-action="Index" class="mb-15"><img src="~/assets/imgs/theme/logo.svg" alt="logo" /></a>
                                 <p class="font-lg text-heading">Awesome grocery store website template</p>
                             </div>
                             <ul class="contact-infor">
-                                <li><img src="assets/imgs/theme/icons/icon-location.svg" alt="" /><strong>Address: </strong> <span>5171 W Campbell Ave undefined Kent, Utah 53127 United States</span></li>
-                                <li><img src="assets/imgs/theme/icons/icon-contact.svg" alt="" /><strong>Call Us:</strong><span>(+91) - 540-025-124553</span></li>
-                                <li><img src="assets/imgs/theme/icons/icon-email-2.svg" alt="" /><strong>Email:</strong><span>sale@Nest.com</span></li>
-                                <li><img src="assets/imgs/theme/icons/icon-clock.svg" alt="" /><strong>Hours:</strong><span>10:00 - 18:00, Mon - Sat</span></li>
+                                <li><img src="~/assets/imgs/theme/icons/icon-location.svg" alt="" /><strong>Address: </strong> <span>5171 W Campbell Ave undefined Kent, Utah 53127 United States</span></li>
+                                <li><img src="~/assets/imgs/theme/icons/icon-contact.svg" alt="" /><strong>Call Us:</strong><span>(+91) - 540-025-124553</span></li>
+                                <li><img src="~/assets/imgs/theme/icons/icon-email-2.svg" alt="" /><strong>Email:</strong><span>sale@Nest.com</span></li>
+                                <li><img src="~/assets/imgs/theme/icons/icon-clock.svg" alt="" /><strong>Hours:</strong><span>10:00 - 18:00, Mon - Sat</span></li>
                             </ul>
                         </div>
                     </div>
@@ -375,22 +374,22 @@
                 </div>
                 <div class="col-xl-4 col-lg-6 text-center d-none d-xl-block">
                     <div class="hotline d-lg-inline-flex mr-30">
-                        <img src="assets/imgs/theme/icons/phone-call.svg" alt="hotline" />
+                        <img src="~/assets/imgs/theme/icons/phone-call.svg" alt="hotline" />
                         <p>1900 - 6666<span>Working 8:00 - 22:00</span></p>
                     </div>
                     <div class="hotline d-lg-inline-flex">
-                        <img src="assets/imgs/theme/icons/phone-call.svg" alt="hotline" />
+                        <img src="~/assets/imgs/theme/icons/phone-call.svg" alt="hotline" />
                         <p>1900 - 8888<span>24/7 Support Center</span></p>
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-6 col-md-6 text-end d-none d-md-block">
                     <div class="mobile-social-icon">
                         <h6>Follow Us</h6>
-                        <a href="#"><img src="assets/imgs/theme/icons/icon-facebook-white.svg" alt="" /></a>
-                        <a href="#"><img src="assets/imgs/theme/icons/icon-twitter-white.svg" alt="" /></a>
-                        <a href="#"><img src="assets/imgs/theme/icons/icon-instagram-white.svg" alt="" /></a>
-                        <a href="#"><img src="assets/imgs/theme/icons/icon-pinterest-white.svg" alt="" /></a>
-                        <a href="#"><img src="assets/imgs/theme/icons/icon-youtube-white.svg" alt="" /></a>
+                        <a href="#"><img src="~/assets/imgs/theme/icons/icon-facebook-white.svg" alt="" /></a>
+                        <a href="#"><img src="~/assets/imgs/theme/icons/icon-twitter-white.svg" alt="" /></a>
+                        <a href="#"><img src="~/assets/imgs/theme/icons/icon-instagram-white.svg" alt="" /></a>
+                        <a href="#"><img src="~/assets/imgs/theme/icons/icon-pinterest-white.svg" alt="" /></a>
+                        <a href="#"><img src="~/assets/imgs/theme/icons/icon-youtube-white.svg" alt="" /></a>
                     </div>
                     <p class="font-sm">Up to 15% discount on your first subscribe</p>
                 </div>
@@ -402,36 +401,36 @@
         <div class="preloader d-flex align-items-center justify-content-center">
             <div class="preloader-inner position-relative">
                 <div class="text-center">
-                    <img src="assets/imgs/theme/loading.gif" alt="" />
+                    <img src="~/assets/imgs/theme/loading.gif" alt="" />
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Vendor JS-->
-    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
-    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
-    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/plugins/slick.js"></script>
-    <script src="assets/js/plugins/jquery.syotimer.min.js"></script>
-    <script src="assets/js/plugins/wow.js"></script>
-    <script src="assets/js/plugins/slider-range.js"></script>
-    <script src="assets/js/plugins/perfect-scrollbar.js"></script>
-    <script src="assets/js/plugins/magnific-popup.js"></script>
-    <script src="assets/js/plugins/select2.min.js"></script>
-    <script src="assets/js/plugins/waypoints.js"></script>
-    <script src="assets/js/plugins/counterup.js"></script>
-    <script src="assets/js/plugins/jquery.countdown.min.js"></script>
-    <script src="assets/js/plugins/images-loaded.js"></script>
-    <script src="assets/js/plugins/isotope.js"></script>
-    <script src="assets/js/plugins/scrollup.js"></script>
-    <script src="assets/js/plugins/jquery.vticker-min.js"></script>
-    <script src="assets/js/plugins/jquery.theia.sticky.js"></script>
-    <script src="assets/js/plugins/jquery.elevatezoom.js"></script>
+    <script src="~/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="~/assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="~/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+    <script src="~/assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/plugins/slick.js"></script>
+    <script src="~/assets/js/plugins/jquery.syotimer.min.js"></script>
+    <script src="~/assets/js/plugins/wow.js"></script>
+    <script src="~/assets/js/plugins/slider-range.js"></script>
+    <script src="~/assets/js/plugins/perfect-scrollbar.js"></script>
+    <script src="~/assets/js/plugins/magnific-popup.js"></script>
+    <script src="~/assets/js/plugins/select2.min.js"></script>
+    <script src="~/assets/js/plugins/waypoints.js"></script>
+    <script src="~/assets/js/plugins/counterup.js"></script>
+    <script src="~/assets/js/plugins/jquery.countdown.min.js"></script>
+    <script src="~/assets/js/plugins/images-loaded.js"></script>
+    <script src="~/assets/js/plugins/isotope.js"></script>
+    <script src="~/assets/js/plugins/scrollup.js"></script>
+    <script src="~/assets/js/plugins/jquery.vticker-min.js"></script>
+    <script src="~/assets/js/plugins/jquery.theia.sticky.js"></script>
+    <script src="~/assets/js/plugins/jquery.elevatezoom.js"></script>
     <!-- Template  JS -->
-    <script src="./assets/js/main.js?v=5.3"></script>
-    <script src="./assets/js/shop.js?v=5.3"></script>
+    <script src="~/assets/js/main.js?v=5.3"></script>
+    <script src="~/assets/js/shop.js?v=5.3"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

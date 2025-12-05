@@ -23,11 +23,6 @@ namespace WebShop.MVC.Controllers
             return View();
         }
 
-        public IActionResult Error404()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
