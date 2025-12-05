@@ -3,7 +3,7 @@
     public class Product
     {
         public int Id { get; set; }                 // PK
-        public string Name { get; set; } = null!;   // "Seeds of Change Organic Quinoe"
+        public string ProductName { get; set; } = null!;   // "Seeds of Change Organic Quinoe"
         public decimal Price { get; set; }         // 28.85
 
         // Category
