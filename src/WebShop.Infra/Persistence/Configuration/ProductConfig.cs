@@ -37,7 +37,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Laptop",
                         Price = 899.99m,
                         ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/1.jpg"
+                        ImageUrl = "1.jpg"
 
                     },
                     new Product
@@ -46,7 +46,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Wireless Mouse",
                         Price = 29.99m,
                         ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/2.jpg"
+                        ImageUrl = "2.jpg"
                     },
                     new Product
                     {
@@ -54,7 +54,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Office Chair",
                         Price = 149.50m,
                         ProductCategoryId = 2,
-                        ImageUrl = "~/assets/imgs/shop/3.jpg"
+                        ImageUrl = "3.jpg"
                     },
                     new Product
                     {
@@ -62,7 +62,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Webcam HD 1080p",
                         Price = 45.00m,
                         ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/4.jpg"
+                        ImageUrl = "4.jpg"
                     },
                     new Product
                     {
@@ -70,7 +70,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Portable SSD 1TB",
                         Price = 129.00m,
                         ProductCategoryId = 1,
-                        ImageUrl = "~/assets/imgs/shop/5.jpg"
+                        ImageUrl = "5.jpg"
                     },
 
                     // Furniture category
@@ -80,7 +80,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Standing Desk",
                         Price = 299.99m,
                         ProductCategoryId = 2,
-                        ImageUrl = "~/assets/imgs/shop/6.jpg"
+                        ImageUrl = "6.jpg"
                     },
                     new Product
                     {
@@ -88,7 +88,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Bookshelf Wooden",
                         Price = 89.99m,
                         ProductCategoryId = 2,
-                        ImageUrl = "~/assets/imgs/shop/7.jpg"
+                        ImageUrl = "7.jpg"
                     },
                     new Product
                     {
@@ -96,7 +96,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Table Lamp LED",
                         Price = 25.99m,
                         ProductCategoryId = 3,
-                        ImageUrl = "~/assets/imgs/shop/8.jpg"
+                        ImageUrl = "8.jpg"
                     },
                     new Product
                     {
@@ -104,7 +104,7 @@ namespace WebShop.Infra.Persistence.Configuration
                         ProductName = "Comfort Footrest",
                         Price = 19.99m,
                         ProductCategoryId = 3,
-                        ImageUrl = "~/assets/imgs/shop/9.jpg"
+                        ImageUrl = "9.jpg"
                     }
             );
         }

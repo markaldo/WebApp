@@ -17,10 +17,8 @@ namespace WebShop.Infra.Persistence
             cb.AddUserSecrets<AppDbContext>(); 
             IConfigurationRoot configuration = cb.Build();
 
-            string connectionString = configuration.GetConnectionString("DefaultConnection");
-
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
             return new AppDbContext(optionsBuilder.Options);
         }
