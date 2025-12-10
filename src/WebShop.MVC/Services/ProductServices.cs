@@ -23,9 +23,27 @@ namespace WebShop.MVC.Services
                 ProductName = p.ProductName,
                 Price = p.Price,
                 ImageUrl = p.ImageUrl,
-                CategoryName = p.Category.CatergoryName
+                CategoryId = p.ProductCategoryId,
+                CategoryName = p.Category.CategoryName
             }).ToList();
             return productViewModel;
+        }
+
+        public async Task<IEnumerable<ProductViewModel>> GetAllProductByCategory(int? categoryid)
+        {
+            
+            var product = await productRepository.GetAllByCategoryIdAsync(categoryid);
+            var productViewModel = product.Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                ImageUrl = p.ImageUrl,
+                CategoryId = p.ProductCategoryId,
+                CategoryName = p.Category.CategoryName
+            }).ToList();
+            return productViewModel;
+
         }
     }
 }

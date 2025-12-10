@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using WebShop.Infra.Persistence;
+using WebShop.MVC.Models;
 
 namespace WebShop.MVC.Controllers
 {
     public class ShopController : Controller
     {
+        
         private readonly ILogger<ShopController> _logger;
         // TODO: IProductService, ICartService, IOrderService
         // private readonly IProductService _products;
@@ -23,6 +29,7 @@ namespace WebShop.MVC.Controllers
             // var model = _products.GetFeaturedOrAll();
             return View();
         }
+        
 
         // GET: /Shop/Product/123 or /Shop/Product?id=123
         // Maps to Views/Shop/Product.cshtml (from shop-product-full.html)

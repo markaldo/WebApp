@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-@model IEnumerable<ProductViewModel>
+@model HomeViewModel
     <div class="container mb-30">
         <div class="row flex-row-reverse">
         <div class="row flex-row-reverse">
@@ -14,7 +14,7 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
                             <div class="row product-grid-4">
-                                @foreach (var product in Model)
+                                @foreach (var product in Model.Products)
                                 {
                                     <div class="col-lg-1-5 col-md-4 col-12 col-sm-6">
                                         <div class="product-cart-wrap mb-30">
@@ -36,8 +36,12 @@
                                             </div>
                                             <div class="product-content-wrap">
                                                 <div class="product-category">
-                                                    <a href="shop-grid-right.html">@product.CategoryName</a>
+                                                    <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@product.CategoryId">
+
+                                                        @product.CategoryName
+                                                    </a>
                                                 </div>
+
                                                 <h2><a href="shop-product-right.html">@product.ProductName</a></h2>
                                                 <div class="product-rate-cover">
                                                     <div class="product-rate d-inline-block">
@@ -75,16 +79,17 @@
                 <div class="sidebar-widget widget-category-2 mb-30">
                     <h5 class="section-title style-1 mb-30">Category</h5>
                     <ul>
-                        @{
-                            var categories = Model.Select(p => p.CategoryName).Distinct().ToList();
-                        }
-                        @foreach (var category in categories)
+                     @foreach (var category in Model.Categories)
                         {
-                            <li>
-                                <a asp-controller="Shop" asp-action="Index"> <img src="assets/imgs/theme/icons/category-1.svg" alt="" />@category</a><span class="count">@Model.Where(p => p.CategoryName == category).Count()</span>
-                            </li>
+                        <li>
+                        <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.CategoryId">
+                        <img src="assets/imgs/theme/icons/category-1.svg" alt="" /> @category.CategoryName
+                        </a>
+                        <span class="count">@Model.Products.Where(p => p.CategoryId == category.CategoryId).Count()</span>
+                        </li>
                         }
                     </ul>
+                  
                 </div>
                 <!-- Fillter By Price -->
                 <div class="sidebar-widget price_range range mb-30">

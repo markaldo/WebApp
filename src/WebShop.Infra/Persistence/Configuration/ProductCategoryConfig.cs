@@ -14,10 +14,10 @@ namespace WebShop.Infra.Persistence.Configuration
         public void Configure(EntityTypeBuilder<ProductCategory> modelBuilder)
         {
             // Primary Key
-            modelBuilder.HasKey(c => c.CatergoryId);
+            modelBuilder.HasKey(c => c.CategoryId);
 
             // Name: required, max length 50
-            modelBuilder.Property(c => c.CatergoryName)
+            modelBuilder.Property(c => c.CategoryName)
                         .IsRequired()
                         .HasMaxLength(50);
 
@@ -26,18 +26,18 @@ namespace WebShop.Infra.Persistence.Configuration
             modelBuilder.HasData(
                 new ProductCategory
                 {
-                    CatergoryId = 1,
-                    CatergoryName = "Electronics"
+                    CategoryId = 1,
+                    CategoryName = "Electronics"
                 },
                 new ProductCategory
                 {
-                    CatergoryId = 2,
-                    CatergoryName = "Furniture"
+                    CategoryId = 2,
+                    CategoryName = "Furniture"
                 },
                 new ProductCategory
                 {
-                    CatergoryId = 3,
-                    CatergoryName = "Accessories"
+                    CategoryId = 3,
+                    CategoryName = "Accessories"
                 }
             );
         }

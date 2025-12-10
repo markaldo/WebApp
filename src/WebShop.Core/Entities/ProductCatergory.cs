@@ -2,8 +2,8 @@
 {
     public class ProductCategory
     {
-        public int CatergoryId { get; set; }          
-        public string CatergoryName { get; set; }   
+        public int CategoryId { get; set; }          
+        public string CategoryName { get; set; }   
         public string? IconUrl { get; set; }
 
         // Navigation

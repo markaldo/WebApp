@@ -20,6 +20,11 @@ namespace WebShop.Infra.Repositories
         public async Task<IEnumerable<Product>> GetAllAsync()
         => await _context.Products.Include(p => p.Category).ToListAsync();
 
+        public async Task<IEnumerable<Product>> GetAllByCategoryIdAsync(int? categoryid)
+        => await _context.Products.Include(p => p.Category)
+            .Where(p => p.ProductCategoryId == categoryid).ToListAsync();
+
+
         public async Task AddSync(Product product)
         => await _context.Products.AddAsync(product);
 
