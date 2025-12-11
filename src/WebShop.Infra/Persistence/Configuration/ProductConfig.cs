@@ -24,6 +24,12 @@ namespace WebShop.Infra.Persistence.Configuration
             modelBuilder.Property(x => x.Price)
                      .HasColumnType("decimal(8,2)");
 
+            modelBuilder.Property(p => p.SalePrice)
+               .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Property(p => p.CreateUtc)
+                   .IsRequired();
+
             //Relationship betweeen product and category
             modelBuilder.HasOne(x => x.Category)
                     .WithMany(c => c.Products)
@@ -36,15 +42,20 @@ namespace WebShop.Infra.Persistence.Configuration
                         Id = 1,
                         ProductName = "Laptop",
                         Price = 899.99m,
+                        SalePrice = 499.99m,
+                        CreateUtc = DateTime.Now.AddDays(-8),
+                        Badge = Badge.None,
                         ProductCategoryId = 1,
                         ImageUrl = "1.jpg"
-
                     },
                     new Product
                     {
                         Id = 2,
                         ProductName = "Wireless Mouse",
                         Price = 29.99m,
+                        SalePrice = 19.99m,
+                        CreateUtc = DateTime.Now,
+                        Badge = Badge.FreeShipping,
                         ProductCategoryId = 1,
                         ImageUrl = "2.jpg"
                     },
@@ -53,6 +64,9 @@ namespace WebShop.Infra.Persistence.Configuration
                         Id = 3,
                         ProductName = "Office Chair",
                         Price = 149.50m,
+                        SalePrice = 149.50m,
+                        CreateUtc = DateTime.Now.AddDays(-3),
+                        Badge = Badge.None,
                         ProductCategoryId = 2,
                         ImageUrl = "3.jpg"
                     },
@@ -61,6 +75,9 @@ namespace WebShop.Infra.Persistence.Configuration
                         Id = 4,
                         ProductName = "Webcam HD 1080p",
                         Price = 45.00m,
+                        SalePrice = 45.00m,
+                        CreateUtc = DateTime.Now.AddDays(-2),
+                        Badge = Badge.None,
                         ProductCategoryId = 1,
                         ImageUrl = "4.jpg"
                     },
@@ -69,6 +86,9 @@ namespace WebShop.Infra.Persistence.Configuration
                         Id = 5,
                         ProductName = "Portable SSD 1TB",
                         Price = 129.00m,
+                        SalePrice = 99.00m,
+                        CreateUtc = DateTime.Now.AddDays(-6),
+                        Badge = Badge.Sale,
                         ProductCategoryId = 1,
                         ImageUrl = "5.jpg"
                     },
@@ -79,6 +99,9 @@ namespace WebShop.Infra.Persistence.Configuration
                         Id = 6,
                         ProductName = "Standing Desk",
                         Price = 299.99m,
+                        SalePrice = 249.99m,
+                        CreateUtc = DateTime.Now.AddDays(-10),
+                        Badge = Badge.FreeShipping,
                         ProductCategoryId = 2,
                         ImageUrl = "6.jpg"
                     },
@@ -87,6 +110,9 @@ namespace WebShop.Infra.Persistence.Configuration
                         Id = 7,
                         ProductName = "Bookshelf Wooden",
                         Price = 89.99m,
+                        SalePrice = 89.99m,
+                        CreateUtc = DateTime.Now.AddDays(-2),
+                        Badge = Badge.None,
                         ProductCategoryId = 2,
                         ImageUrl = "7.jpg"
                     },
@@ -95,6 +121,9 @@ namespace WebShop.Infra.Persistence.Configuration
                         Id = 8,
                         ProductName = "Table Lamp LED",
                         Price = 25.99m,
+                        SalePrice = 25.99m,
+                        CreateUtc = DateTime.Now.AddDays(-10),
+                        Badge = Badge.None,
                         ProductCategoryId = 3,
                         ImageUrl = "8.jpg"
                     },
@@ -103,6 +132,9 @@ namespace WebShop.Infra.Persistence.Configuration
                         Id = 9,
                         ProductName = "Comfort Footrest",
                         Price = 19.99m,
+                        SalePrice = 19.99m,
+                        CreateUtc = DateTime.Now.AddDays(-10),
+                        Badge = Badge.None,
                         ProductCategoryId = 3,
                         ImageUrl = "9.jpg"
                     }

@@ -20,6 +20,9 @@ namespace WebShop.Infra.Persistence.Configuration
             modelBuilder.Property(o => o.AdditionalInfo)
                 .HasMaxLength(50);
 
+            modelBuilder.Property(o => o.OrderDate)
+                   .IsRequired();
+
             modelBuilder.HasMany(o => o.OrderLines) // One order -> Many orderline
                 .WithOne(ol =>ol.Order)
                 .HasForeignKey(ol => ol.OrderId)
@@ -32,19 +35,22 @@ namespace WebShop.Infra.Persistence.Configuration
                 {
                     Id = 1,
                     AdditionalInfo = "First seeded order - priority shipping",
-                    TotalPrice = 129.99m
+                    TotalPrice = 129.99m,
+                    OrderDate = DateTime.UtcNow.AddDays(-1)
                 },
                 new Order
                 {
                     Id = 2,
                     AdditionalInfo = "Second seeded order - gift wrap",
-                    TotalPrice = 49.50m
+                    TotalPrice = 49.50m,
+                    OrderDate = DateTime.UtcNow.AddDays(-2)
                 },
                 new Order
                 {
                     Id = 3,
                     AdditionalInfo = "Third seeded order - international",
-                    TotalPrice = 299.00m
+                    TotalPrice = 299.00m,
+                    OrderDate = DateTime.UtcNow.AddDays(-1)
                 }
             );
         }

@@ -12,6 +12,7 @@ namespace WebShop.Core.Repositories
         Task<Product?> GetById(int id);
         Task<IEnumerable<Product>> GetAllAsync();
         Task<IEnumerable<Product>> GetAllByCategoryIdAsync(int? categoryid);
+        Task<Badge> GetBadgeAsync(Product product);
         Task AddSync(Product product);
         void UpdateSync(Product product);
         void DeleteSync(Product product);

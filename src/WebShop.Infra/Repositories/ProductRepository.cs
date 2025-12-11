@@ -17,12 +17,34 @@ namespace WebShop.Infra.Repositories
         public async Task<Product?> GetById(int id)
          => await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public async Task<IEnumerable<Product>> GetAllAsync()   
         => await _context.Products.Include(p => p.Category).ToListAsync();
 
         public async Task<IEnumerable<Product>> GetAllByCategoryIdAsync(int? categoryid)
         => await _context.Products.Include(p => p.Category)
             .Where(p => p.ProductCategoryId == categoryid).ToListAsync();
+        public async Task<Badge> GetBadgeAsync(Product product)
+        {
+            if (product.Badge != Badge.None)
+            {
+                return product.Badge;
+            }
+            if ((DateTime.UtcNow - product.CreateUtc).TotalDays < 5)
+            {
+                return Badge.New;
+            }
+
+            var threeDaysAgo = DateTime.UtcNow.AddDays(-3);
+            var totalSold = await _context.OrderLines
+                .Where(ol => ol.ProductId == product.Id && ol.Order.OrderDate >= threeDaysAgo)
+                .SumAsync(ol => ol.Quantity);
+
+            if (totalSold > 50)
+            {
+                return Badge.Hot;
+            }
+            return Badge.None;
+        }
 
 
         public async Task AddSync(Product product)

@@ -26,9 +26,9 @@ namespace WebShop.Infra.Persistence.Configuration
             // Seed sample OrderLine data.
             // NOTE: Ensure the ProductId and OrderId values below match the IDs of existing seeded Product and Order rows in your database seed.
             modelBuilder.HasData(
-                new OrderLine { Id = 1, OrderId = 1, ProductId = 1, Quantity = 2 },
+                new OrderLine { Id = 1, OrderId = 1, ProductId = 1, Quantity = 30 },
                 new OrderLine { Id = 2, OrderId = 1, ProductId = 2, Quantity = 1 },
-                new OrderLine { Id = 3, OrderId = 2, ProductId = 1, Quantity = 5 }
+                new OrderLine { Id = 3, OrderId = 2, ProductId = 1, Quantity = 25 }
              
             );
         }

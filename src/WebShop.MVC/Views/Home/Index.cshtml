@@ -1,4 +1,5 @@
-﻿@{
+﻿@using WebShop.Core.Entities
+@{
     ViewData["Title"] = "Home Page";
 }
 @model HomeViewModel
@@ -31,7 +32,9 @@
                                                     <a aria-label="Quick view" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
                                                 </div>
                                                 <div class="product-badges product-badges-position product-badges-mrg">
-                                                    <span class="hot">Hot</span>
+                                                    <span class="badge @GetBadgeClass(product.Badge)">
+                                                        @GetBadgeText(product.Badge)
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="product-content-wrap">
@@ -109,4 +112,23 @@
         </div>
     </div>
 </div>
-    <!--End category slider-->
+
+@functions {
+    string GetBadgeClass(Badge badge) => badge switch
+    {
+        Badge.FreeShipping => "bg-primary",
+        Badge.Sale => "bg-primary",
+        Badge.New => "bg-success",
+        Badge.Hot => "bg-danger",
+        _ => "bg-light text-dark"
+    };
+
+    string GetBadgeText(Badge badge) => badge switch
+    {
+        Badge.FreeShipping => "Free Shipping",
+        Badge.Sale => "Sale",
+        Badge.New => "New",
+        Badge.Hot => "Hot",
+        _ => ""
+    };
+}
