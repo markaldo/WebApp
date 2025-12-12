@@ -6,6 +6,7 @@ namespace WebShop.MVC.Models
     {
         public IEnumerable<CategoryViewModel> Categories { get; set; }  
         public IEnumerable<ProductViewModel> Products { get; set; }
+        public int CartItemCount { get; set; }
 
     }
 }

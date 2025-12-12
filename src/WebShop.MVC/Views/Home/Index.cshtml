@@ -11,7 +11,7 @@
                     <div class="section-title style-2">
                         <h3>Products</h3>
                     </div>
-                    <!--End nav-tabs dgdg--> 
+                    <!--End nav-tabs--> 
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
                             <div class="row product-grid-4">
@@ -61,7 +61,9 @@
                                                         <span class="old-price">@product.Price</span>
                                                     </div>
                                                     <div class="add-cart">
-                                                        <a class="add" href="shop-cart.html"><i class="fi-rs-shopping-cart mr-5"></i>Add </a>
+                                                        <button class="add-cart-btn" data-product-id="@product.Id" data-product-name="@product.ProductName">
+                                                            <i class="fi-rs-shopping-cart mr-5"></i>Add
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

@@ -1,0 +1,65 @@
+﻿@model CartHeaderViewModel
+
+<div class="header-action-icon-2">
+    <a class="mini-cart-icon" asp-controller="Shop" asp-action="Cart">
+        <img alt="Nest" src="~/assets/imgs/theme/icons/icon-cart.svg" />
+        <span id="cart-count" class="pro-count blue">
+            @Model.ItemCount
+        </span>
+    </a>
+    <a asp-controller="Shop" asp-action="Cart">
+        <span class="lable">Cart</span>
+    </a>
+
+    <div class="cart-dropdown-wrap cart-dropdown-hm2">
+        <ul>
+            @if (!Model.Items.Any())
+            {
+                <li class="text-center py-3">
+                    <em>Cart is empty</em>
+                </li>
+            }
+            else
+            {
+                @foreach (var item in Model.Items.Take(3))
+                {
+                    <li>
+                        <div class="shopping-cart-img">
+                            <a asp-controller="Shop" asp-action="Product" asp-route-id="@item.ProductId">
+                                <img alt="@item.ProductName" src="@item.ImageUrl" />
+                            </a>
+                        </div>
+                        <div class="shopping-cart-title">
+                            <h4>
+                                <a asp-controller="Shop" asp-action="Product" asp-route-id="@item.ProductId">
+                                    @item.ProductName
+                                </a>
+                            </h4>
+                            <h4>
+                                <span>@item.Quantity × </span>@item.Price.ToString("C")
+                            </h4>
+                        </div>
+                        <div class="shopping-cart-delete">
+                            <form asp-controller="Shop" asp-action="RemoveFromCart" method="post">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit" class="border-0 bg-transparent p-0">
+                                    <i class="fi-rs-cross-small"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                }
+            }
+        </ul>
+        <div class="shopping-cart-footer">
+            <div class="shopping-cart-total">
+                <h4>Total <span id="cart-total">@Model.Total.ToString("C")</span></h4>
+            </div>
+            <div class="shopping-cart-button">
+                <a asp-controller="Shop" asp-action="Cart" class="outline">View cart</a>
+                <a asp-controller="Shop" asp-action="Checkout">Checkout</a>
+            </div>
+        </div>
+    </div>
+</div>
+

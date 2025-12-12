@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebShop.Core.Repositories;
+using WebShop.Infra;
 using WebShop.Infra.Persistence;
 using WebShop.Infra.Repositories;
 

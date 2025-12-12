@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using WebShop.Core.Entities;
+using WebShop.Core.Repositories;
 using WebShop.Infra.Persistence;
 using WebShop.MVC.Models;
 
@@ -12,14 +14,15 @@ namespace WebShop.MVC.Controllers
     {
         
         private readonly ILogger<ShopController> _logger;
+        private readonly IShoppingCartService _cartService;
         // TODO: IProductService, ICartService, IOrderService
         // private readonly IProductService _products;
-        // private readonly ICartService _cart;
-        public ShopController(ILogger<ShopController> logger /*, IProductService products, ICartService cart */)
+
+        public ShopController(ILogger<ShopController> logger , IShoppingCartService cartService /*, IProductService products*/)
         {
             _logger = logger;
+            _cartService = cartService;
             // _products = products;
-            // _cart = cart;
         }
 
         // Optional landing page -> Views/Shop/Index.cshtml (e.g., product list)
@@ -29,44 +32,35 @@ namespace WebShop.MVC.Controllers
             // var model = _products.GetFeaturedOrAll();
             return View();
         }
-        
 
-        // GET: /Shop/Product/123 or /Shop/Product?id=123
-        // Maps to Views/Shop/Product.cshtml (from shop-product-full.html)
-        // [HttpGet]
-        /* public IActionResult ProductDetails(int? id)
+        //public async Task<IActionResult> AddToCart(int id, int quantity = 1)
+        //{
+        //    await _cartService.AddToCartAsync(id, quantity);
+        //    TempData["SuccessMessage"] = $"{quantity} item(s) added to cart!";
+        //    return RedirectToAction("Index", "Home");
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> AddToCart(int id, int quantity = 1)
         {
-            if (id == null)
+            await _cartService.AddToCartAsync(id, quantity);
+            var cartItems = await _cartService.GetCartItemsAsync();
+            var totalItems = cartItems.Sum(item => item.Quantity);
+            var totalPrice = await _cartService.GetTotalAsync();
+
+            return Json(new
             {
-                // No id supplied; you can redirect to Index or show a not-found message
-                return RedirectToAction(nameof(Index));
-            }
-
-            // var product = _products.GetById(id.Value);
-            // if (product == null) return NotFound();
-            // return View(product);
-
-            return View();
-        }*/
-
-        // GET: /Shop/Cart
-        // Maps to Views/Shop/Cart.cshtml (from shop-cart.html)
-        // [HttpGet]
-        public IActionResult Cart()
-        {
-            // var cart = _cart.GetForUser(User);
-            // return View(cart);
-            return View();
+                success = true,
+                totalItems = totalItems,
+                totalPrice = totalPrice.ToString("C")
+            });
         }
 
-        // POST: /Shop/Cart/Add
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        public IActionResult AddToCart(int productId, int quantity = 1)
+        public async Task<IActionResult> Cart()
         {
-            // if (quantity < 1) quantity = 1;
-            // _cart.Add(User, productId, quantity);
-            return RedirectToAction(nameof(Cart));
+            var items = await _cartService.GetCartItemsAsync();
+            ViewBag.Total = await _cartService.GetTotalAsync();
+            return View(items);
         }
 
         // POST: /Shop/Cart/Update
@@ -86,6 +80,47 @@ namespace WebShop.MVC.Controllers
             // _cart.Remove(User, productId);
             return RedirectToAction(nameof(Cart));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCartDropdown()
+        {
+            var items = await _cartService.GetCartItemsAsync();
+            var total = await _cartService.GetTotalAsync();
+
+            var dropdownHtml = GenerateCartDropdownHtml(items, total);
+            return Json(new { html = dropdownHtml, count = items.Sum(i => i.Quantity) });
+        }
+
+        private string GenerateCartDropdownHtml(IEnumerable<CartItem> items, decimal total)
+        {
+            var html = "";
+            foreach (var item in items.Take(3)) // Show max 3 items
+            {
+                html += $@"
+            <li>
+                <div class='shopping-cart-img'>
+                    <a asp-controller='Shop' asp-action='Product' asp-route-id='{item.Product.Id}'>
+                        <img alt='Nest' src='{item.Product.ImageUrl ?? "~/assets/imgs/shop/thumbnail-1.jpg"}' />
+                    </a>
+                </div>
+                <div class='shopping-cart-title'>
+                    <h4><a asp-controller='Shop' asp-action='Product' asp-route-id='{item.Product.Id}'>{item.Product.ProductName}</a></h4>
+                    <h4><span>{item.Quantity} × </span>{item.Product.Price.ToString("C")}</h4>
+                </div>
+                <div class='shopping-cart-delete'>
+                    <a href='#' onclick='removeFromCart({item.Product.Id}); return false;'>
+                        <i class='fi-rs-cross-small'></i>
+                    </a>
+                </div>
+            </li>";
+            }
+
+            if (!items.Any())
+                html += "<li class='text-center py-3'><em>Cart is empty</em></li>";
+
+            return html;
+        }
+
 
         // GET: /Shop/Wishlist
         // Maps to Views/Shop/Wishlist.cshtml (from shop-wishlist.html)
@@ -125,18 +160,6 @@ namespace WebShop.MVC.Controllers
             return View();
         }
 
-        // POST: /Shop/Checkout
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public IActionResult Checkout(/* CheckoutViewModel model */)
-        /*{
-            // if (!ModelState.IsValid) return View(model);
-            // var orderId = _cart.PlaceOrder(User, model);
-            // return RedirectToAction(nameof(OrderConfirmation), new { id = orderId });
-            return RedirectToAction(nameof(OrderConfirmation), new { id = 0 });
-        }*/
-
-        // GET: /Shop/OrderConfirmation/1001
         // [HttpGet]
         public IActionResult OrderConfirmation(int id)
         {

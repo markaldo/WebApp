@@ -150,48 +150,30 @@
                                     <a asp-controller="Shop" asp-action="Wishlist"><span class="lable">Wishlist</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" asp-controller="Shop" asp-action="Cart">
+                                    <a class="mini-cart-icon cart-link" asp-controller="Shop" asp-action="Cart">
                                         <img alt="Nest" src="~/assets/imgs/theme/icons/icon-cart.svg" />
-                                        <span class="pro-count blue">2</span>
+                                        <span id="cart-count" class="pro-count blue">0</span> <!-- Dynamic count -->
                                     </a>
                                     <a asp-controller="Shop" asp-action="Cart"><span class="lable">Cart</span></a>
-                                    <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                        <ul>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a asp-controller="Shop" asp-action="Product"><img alt="Nest" src="~/assets/imgs/shop/thumbnail-3.jpg" /></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a asp-controller="Shop" asp-action="Product">Daisy Casual Bag</a></h4>
-                                                    <h4><span>1 × </span>$800.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="shopping-cart-img">
-                                                    <a asp-controller="Shop" asp-action="Product"><img alt="Nest" src="~/assets/imgs/shop/thumbnail-2.jpg" /></a>
-                                                </div>
-                                                <div class="shopping-cart-title">
-                                                    <h4><a asp-controller="Shop" asp-action="Product">Corduroy Shirts</a></h4>
-                                                    <h4><span>1 × </span>$3200.00</h4>
-                                                </div>
-                                                <div class="shopping-cart-delete">
-                                                    <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                                </div>
-                                            </li>
+
+                                    <!-- Dynamic cart dropdown - initially hidden -->
+                                    <div id="cart-dropdown" class="cart-dropdown-wrap cart-dropdown-hm2" style="display: none;">
+                                        <ul id="cart-items-list">
+                                            <!-- Items loaded here .. -->
                                         </ul>
                                         <div class="shopping-cart-footer">
                                             <div class="shopping-cart-total">
-                                                <h4>Total <span>$4000.00</span></h4>
+                                                <h4>Total <span id="cart-total">$0.00</span></h4>
                                             </div>
                                             <div class="shopping-cart-button">
                                                 <a asp-controller="Shop" asp-action="Cart" class="outline">View cart</a>
-                                                <a href="shop-checkout.html">Checkout</a>
+                                                <a asp-controller="Shop" asp-action="Checkout">Checkout</a>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div id="header-cart-container">
+                                    @await Component.InvokeAsync("CartHeader")
                                 </div>
                                 <div class="header-action-icon-2">
                                     <a asp-controller="Account" asp-action="Account">

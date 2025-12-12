@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebShop.Core.Repositories;
@@ -51,12 +52,14 @@ namespace WebShop.MVC.Controllers
             var viewModel = new HomeViewModel()
             {
                 Products = products,
-                Categories = categories
+                Categories = categories,
+                CartItemCount = cartItemCount  
             };
 
             return View(viewModel);
             
         }
+
         public IActionResult Privacy()
         {
             return View();
@@ -67,5 +70,11 @@ namespace WebShop.MVC.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult HeaderCartFragment()
+        {
+            return ViewComponent("CartHeader");
+        }
+
     }
 }
