@@ -18,6 +18,7 @@ namespace WebShop.MVC.Controllers
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
         }
+
         public async Task<IActionResult> Index(int? CategoryId)
         {
             var categories = (await _categoryRepository.GetAllAsync()).Select(c => new CategoryViewModel
@@ -37,6 +38,7 @@ namespace WebShop.MVC.Controllers
 
                 products.Add(new ProductViewModel
                 {
+                    Id = p.Id,
                     ProductName = p.ProductName,
                     Price = p.Price,
                     SalePrice = p.SalePrice,
@@ -55,7 +57,7 @@ namespace WebShop.MVC.Controllers
             };
 
             return View(viewModel);
-            
+
         }
         public IActionResult Privacy()
         {

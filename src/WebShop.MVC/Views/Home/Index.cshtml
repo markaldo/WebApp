@@ -21,9 +21,11 @@
                                         <div class="product-cart-wrap mb-30">
                                             <div class="product-img-action-wrap">
                                                 <div class="product-img product-img-zoom">
-                                                    <a href="shop-product-right.html">
-                                                        <img class="default-img" src="~/assets/imgs/shop/@product.ImageUrl" alt="Product image" />
-                                                        <img class="hover-img" src="~/assets/imgs/shop/@product.ImageUrl" alt="" />
+                                                    <a asp-controller="Product"
+                                                       asp-action="Details"
+                                                       asp-route-id="@product.Id">
+                                                        <img class="default-img" src="~/assets/imgs/shop/@product.ImageUrl" alt="@product.ProductName" />
+                                                        <img class="hover-img" src="~/assets/imgs/shop/@product.ImageUrl" alt="@product.ProductName" />
                                                     </a>
                                                 </div>
                                                 <div class="product-action-1" style="display: flex; gap: 5px;">
@@ -45,7 +47,13 @@
                                                     </a>
                                                 </div>
 
-                                                <h2><a href="shop-product-right.html">@product.ProductName</a></h2>
+                                                <h2>
+                                                    <a asp-controller="Product"
+                                                       asp-action="Details"
+                                                       asp-route-id="@product.Id">
+                                                        @product.ProductName
+                                                    </a>
+                                                </h2>
                                                 <div class="product-rate-cover">
                                                     <div class="product-rate d-inline-block">
                                                         <div class="product-rating" style="width: 90%"></div>

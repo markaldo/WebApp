@@ -213,7 +213,19 @@
                                     <a asp-controller="Account" asp-action="Account">
                                         <img class="svgInject" alt="Nest" src="~/assets/imgs/theme/icons/icon-user.svg" />
                                     </a>
-                                    <a asp-controller="Account" asp-action="Account"><span class="lable ml-0">@User.Identity.Name</span></a>
+
+                                    <a asp-controller="Account" asp-action="Account">
+                                        <span class="lable ml-0">
+                                            @if (User.Identity.IsAuthenticated)
+                                            {
+                                                @User.Identity.Name
+                                            }
+                                            else
+                                            {
+                                                @:Account
+                                            }
+                                        </span>
+                                    </a>
 
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                         @if (User.Identity.IsAuthenticated)
@@ -226,12 +238,11 @@
                                                 <li><a asp-controller="Account" asp-action="Account"><i class="fi fi-rs-settings-sliders mr-10"></i>Setting</a></li>
                                                 <li>
                                                     <form asp-controller="Account" asp-action="Logout" method="post">
-                                                        <button type="submit" class=" menu-link">
+                                                        <button type="submit" class="menu-link">
                                                             <i class="fi fi-rs-sign-out mr-10"></i>Sign out
                                                         </button>
                                                     </form>
                                                 </li>
-
                                             </ul>
                                         }
                                         else
