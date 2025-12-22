@@ -4,9 +4,8 @@ namespace WebShop.MVC.Models
 {
     public class HomeViewModel
     {
-        public IEnumerable<CategoryViewModel> Categories { get; set; }  
-        public IEnumerable<ProductViewModel> Products { get; set; }
-        public int CartItemCount { get; set; }
-
+        public required IEnumerable<ProductViewModel> Products { get; set; }
+        public required IEnumerable<CategoryViewModel> Categories { get; set; }
+        public int CartItemCount { get; set; } = 0;
     }
 }

@@ -40,7 +40,6 @@
                                             <div class="product-content-wrap">
                                                 <div class="product-category">
                                                     <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@product.CategoryId">
-
                                                         @product.CategoryName
                                                     </a>
                                                 </div>
@@ -61,9 +60,9 @@
                                                         <span class="old-price">@product.Price</span>
                                                     </div>
                                                     <div class="add-cart">
-                                                        <button class="add-cart-btn" data-product-id="@product.Id" data-product-name="@product.ProductName">
+                                                        <a class="add-cart-btn add" data-product-id="@product.Id" data-product-name="@product.ProductName">
                                                             <i class="fi-rs-shopping-cart mr-5"></i>Add
-                                                        </button>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -88,7 +87,7 @@
                         {
                         <li>
                         <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.CategoryId">
-                        <img src="assets/imgs/theme/icons/category-1.svg" alt="" /> @category.CategoryName
+                            <img src="~/assets/imgs/theme/icons/category-1.svg" alt="" /> @category.CategoryName
                         </a>
                         <span class="count">@Model.Products.Where(p => p.CategoryId == category.CategoryId).Count()</span>
                         </li>
@@ -134,3 +133,56 @@
         _ => ""
     };
 }
+
+@section Scripts {
+    <script>
+            $(document).ready(function() {
+            $('.add-cart-btn').click(function(e) {
+                e.preventDefault();
+
+                var btn = $(this);
+                var productId = btn.data('product-id');
+                var productName = btn.data('product-name');
+
+                // loading state
+                var originalHtml = btn.html();
+                btn.prop('disabled', true)
+                   .html('<i class="fi-rs-spinner spinner mr-5"></i>Adding...');
+
+                // ajax call
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Shop")',
+                    type: 'POST',
+                    data: { id: productId, quantity: 1 },
+                    success: function(response) {
+                        if (response.success) {
+                            // success state - "Added!"
+                            btn.html('<i class="fi-rs-check text-success mr-5"></i>Added!');
+
+                            // update cart counter in header (ViewComponent)
+                            $('#cart-count').text(response.totalItems);
+                            if (response.totalItems > 0) {
+                                $('#cart-count').show();
+                            }
+
+                            // reload cart dropdown via ViewComponent fragment
+                            $('#header-cart-container-2').load('@Url.Action("HeaderCartFragment", "Home")');
+
+                            // return original state
+                            setTimeout(function() {
+                                btn.html(originalHtml)
+                                   .prop('disabled', false);
+                            }, 2000);
+                        }
+                    },
+                    error: function() {
+                        // error state - back to original
+                        btn.html(originalHtml).prop('disabled', false);
+                        alert('Error adding to cart');
+                    }
+                });
+            });
+        });
+    </script>
+}
+

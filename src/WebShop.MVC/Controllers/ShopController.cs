@@ -15,8 +15,6 @@ namespace WebShop.MVC.Controllers
         
         private readonly ILogger<ShopController> _logger;
         private readonly IShoppingCartService _cartService;
-        // TODO: IProductService, ICartService, IOrderService
-        // private readonly IProductService _products;
 
         public ShopController(ILogger<ShopController> logger , IShoppingCartService cartService /*, IProductService products*/)
         {
@@ -25,20 +23,12 @@ namespace WebShop.MVC.Controllers
             // _products = products;
         }
 
-        // Optional landing page -> Views/Shop/Index.cshtml (e.g., product list)
         // [HttpGet]
         public IActionResult ProductDetails()
         {
             // var model = _products.GetFeaturedOrAll();
             return View();
         }
-
-        //public async Task<IActionResult> AddToCart(int id, int quantity = 1)
-        //{
-        //    await _cartService.AddToCartAsync(id, quantity);
-        //    TempData["SuccessMessage"] = $"{quantity} item(s) added to cart!";
-        //    return RedirectToAction("Index", "Home");
-        //}
 
         [HttpPost]
         public async Task<IActionResult> AddToCart(int id, int quantity = 1)
@@ -59,26 +49,59 @@ namespace WebShop.MVC.Controllers
         public async Task<IActionResult> Cart()
         {
             var items = await _cartService.GetCartItemsAsync();
+            ViewBag.Subtotal = items.Sum(item => item.LineTotal);
             ViewBag.Total = await _cartService.GetTotalAsync();
             return View(items);
         }
 
         // POST: /Shop/Cart/Update
-        // [HttpPost]
         // [ValidateAntiForgeryToken]
-        public IActionResult UpdateCart(int productId, int quantity)
+        [HttpPost]
+        public async Task<IActionResult> UpdateCart(int productId, int quantity)
         {
-            // _cart.Update(User, productId, quantity);
-            return RedirectToAction(nameof(Cart));
+            quantity = Math.Max(0, quantity);
+
+            // Get fresh data from updated cart
+            await _cartService.UpdateQuantityAsync(productId, quantity);
+            var items = await _cartService.GetCartItemsAsync();
+            var total = await _cartService.GetTotalAsync();
+            var updatedItem = items.FirstOrDefault(i => i.Product.Id == productId);
+
+            return Json(new
+            {
+                success = true,
+                newQuantity = quantity,
+                lineTotal = updatedItem?.LineTotal.ToString("C") ?? "£0.00",
+                cartTotal = total.ToString("C"),
+                itemCount = items.Sum(i => i.Quantity),  
+                remainingItems = items.Count()
+            });
         }
 
         // POST: /Shop/Cart/Remove
-        //[HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult RemoveFromCart(int productId)
+        //[ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromCart(int productId)
         {
-            // _cart.Remove(User, productId);
-            return RedirectToAction(nameof(Cart));
+            await _cartService.RemoveFromCartAsync(productId);
+
+            var items = await _cartService.GetCartItemsAsync();
+            var total = await _cartService.GetTotalAsync();
+
+            return Json(new
+            {
+                success = true,
+                cartTotal = total.ToString("C"),
+                itemCount = items.Sum(i => i.Quantity),           
+                remainingItems = items.Count(i => i.Quantity > 0) 
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ClearCart()
+        {
+            await _cartService.ClearCartAsync();
+            return RedirectToAction("Cart");
         }
 
         [HttpGet]
@@ -119,54 +142,6 @@ namespace WebShop.MVC.Controllers
                 html += "<li class='text-center py-3'><em>Cart is empty</em></li>";
 
             return html;
-        }
-
-
-        // GET: /Shop/Wishlist
-        // Maps to Views/Shop/Wishlist.cshtml (from shop-wishlist.html)
-        // [HttpGet]
-        public IActionResult Wishlist()
-        {
-            // var wishlist = _products.GetWishlist(User);
-            // return View(wishlist);
-            return View();
-        }
-
-        // POST: /Shop/Wishlist/Add
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        public IActionResult AddToWishlist(int productId)
-        {
-            // _products.AddToWishlist(User, productId);
-            return RedirectToAction(nameof(Wishlist));
-        }
-
-        // POST: /Shop/Wishlist/Remove
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        public IActionResult RemoveFromWishlist(int productId)
-        {
-            // _products.RemoveFromWishlist(User, productId);
-            return RedirectToAction(nameof(Wishlist));
-        }
-
-        // GET: /Shop/Checkout
-        // Maps to Views/Shop/Checkout.cshtml (from shop-checkout.html)
-        // [HttpGet]
-        public IActionResult Checkout()
-        {
-            // var model = _cart.GetCheckoutModel(User);
-            // return View(model);
-            return View();
-        }
-
-        // [HttpGet]
-        public IActionResult OrderConfirmation(int id)
-        {
-            // var order = _orders.GetByIdForUser(User, id);
-            // if (order == null) return NotFound();
-            // return View(order);
-            return View();
         }
     }
 }

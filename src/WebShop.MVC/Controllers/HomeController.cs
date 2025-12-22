@@ -10,13 +10,14 @@ namespace WebShop.MVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IProductRepository _productRepository;
+        private readonly IShoppingCartService _cartService;
         private readonly ICategoryRepository _categoryRepository;
 
-
-        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, ICategoryRepository categoryRepository)
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, IShoppingCartService cartService,ICategoryRepository categoryRepository)
         {
             _logger = logger;
             _productRepository = productRepository;
+            _cartService = cartService;
             _categoryRepository = categoryRepository;
         }
         public async Task<IActionResult> Index(int? CategoryId)
@@ -38,6 +39,7 @@ namespace WebShop.MVC.Controllers
 
                 products.Add(new ProductViewModel
                 {
+                    Id = p.Id,
                     ProductName = p.ProductName,
                     Price = p.Price,
                     SalePrice = p.SalePrice,
@@ -48,16 +50,15 @@ namespace WebShop.MVC.Controllers
                 });
             }
 
-
+            var cartCount = (await _cartService.GetCartItemsAsync()).Sum(item => item.Quantity);
             var viewModel = new HomeViewModel()
             {
                 Products = products,
                 Categories = categories,
-                CartItemCount = cartItemCount  
+                CartItemCount = cartCount  
             };
 
             return View(viewModel);
-            
         }
 
         public IActionResult Privacy()
@@ -70,11 +71,10 @@ namespace WebShop.MVC.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
+          
         public IActionResult HeaderCartFragment()
         {
             return ViewComponent("CartHeader");
         }
-
     }
 }

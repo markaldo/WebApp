@@ -17,6 +17,7 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="~/assets/css/plugins/slider-range.css" />
     <link rel="stylesheet" href="~/assets/css/main.css?v=5.3" />
+    <link rel="stylesheet" href="~/assets/css/custom/notification.css" />
     <!--<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />-->
     <!--<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> -->
     <!--<link rel="stylesheet" href="~/WebShop.MVC.styles.css" asp-append-version="true" /> -->
@@ -135,13 +136,13 @@
                                         </select>
                                     </form>
                                 </div>
-                                <!-- <div class="header-action-icon-2">
+                                <div class="header-action-icon-2">
                                     <a href="shop-compare.html">
-                                        <img class="svgInject" alt="Nest" src="assets/imgs/theme/icons/icon-compare.svg" />
+                                        <img class="svgInject" alt="Nest" src="~/assets/imgs/theme/icons/icon-compare.svg" />
                                         <span class="pro-count blue">3</span>
                                     </a>
                                     <a href="shop-compare.html"><span class="lable ml-0">Compare</span></a>
-                                </div> -->
+                                </div> 
                                 <div class="header-action-icon-2">
                                     <a asp-controller="Shop" asp-action="Wishlist">
                                         <img class="svgInject" alt="Nest" src="~/assets/imgs/theme/icons/icon-heart.svg" />
@@ -149,30 +150,7 @@
                                     </a>
                                     <a asp-controller="Shop" asp-action="Wishlist"><span class="lable">Wishlist</span></a>
                                 </div>
-                                <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon cart-link" asp-controller="Shop" asp-action="Cart">
-                                        <img alt="Nest" src="~/assets/imgs/theme/icons/icon-cart.svg" />
-                                        <span id="cart-count" class="pro-count blue">0</span> <!-- Dynamic count -->
-                                    </a>
-                                    <a asp-controller="Shop" asp-action="Cart"><span class="lable">Cart</span></a>
-
-                                    <!-- Dynamic cart dropdown - initially hidden -->
-                                    <div id="cart-dropdown" class="cart-dropdown-wrap cart-dropdown-hm2" style="display: none;">
-                                        <ul id="cart-items-list">
-                                            <!-- Items loaded here .. -->
-                                        </ul>
-                                        <div class="shopping-cart-footer">
-                                            <div class="shopping-cart-total">
-                                                <h4>Total <span id="cart-total">$0.00</span></h4>
-                                            </div>
-                                            <div class="shopping-cart-button">
-                                                <a asp-controller="Shop" asp-action="Cart" class="outline">View cart</a>
-                                                <a asp-controller="Shop" asp-action="Checkout">Checkout</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="header-cart-container">
+                                <div id="header-cart-container-2">
                                     @await Component.InvokeAsync("CartHeader")
                                 </div>
                                 <div class="header-action-icon-2">

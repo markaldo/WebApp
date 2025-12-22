@@ -26,7 +26,7 @@
                     <li>
                         <div class="shopping-cart-img">
                             <a asp-controller="Shop" asp-action="Product" asp-route-id="@item.ProductId">
-                                <img alt="@item.ProductName" src="@item.ImageUrl" />
+                                <img alt="@item.ProductName" src="~/assets/imgs/shop/@item.ImageUrl"/>
                             </a>
                         </div>
                         <div class="shopping-cart-title">
@@ -41,7 +41,7 @@
                         </div>
                         <div class="shopping-cart-delete">
                             <form asp-controller="Shop" asp-action="RemoveFromCart" method="post">
-                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <input type="hidden" name="productId" value="@item.ProductId"/>
                                 <button type="submit" class="border-0 bg-transparent p-0">
                                     <i class="fi-rs-cross-small"></i>
                                 </button>

@@ -32,7 +32,7 @@ namespace WebShop.Core.Components
                     ProductId = i.Product.Id,
                     ProductName = i.Product.ProductName,
                     ImageUrl = string.IsNullOrEmpty(i.Product.ImageUrl)
-                        ? "/assets/imgs/shop/thumbnail-1.jpg"
+                        ? "~/assets/imgs/shop/thumbnail-1.jpg"
                         : i.Product.ImageUrl,
                     Price = i.Product.Price,
                     Quantity = i.Quantity

@@ -121,7 +121,6 @@ namespace WebShop.Infra
             return Task.FromResult(new Dictionary<int, int>());
         }
 
-
         private Task SaveCartItemsAsync(Dictionary<int, int> cartItems)
         {
             var context = _httpContextAccessor.HttpContext;

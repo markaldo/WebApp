@@ -3,8 +3,8 @@
 {   
     public class Product
     {
-        public int Id { get; set; }           
-        public string ProductName { get; set; } 
+        public required int Id { get; set; }           
+        public required string ProductName { get; set; } 
         public decimal Price { get; set; }
         public decimal? SalePrice { get; set; }
         public string ImageUrl { get; set; }
