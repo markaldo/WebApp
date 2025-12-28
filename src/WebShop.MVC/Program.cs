@@ -3,11 +3,20 @@ using WebShop.Core.Repositories;
 using WebShop.Infra;
 using WebShop.Infra.Persistence;
 using WebShop.Infra.Repositories;
+using WebShop.Infra.DependencyInjection; // contains AddIdentityServices extension
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Connection string
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register Identity + EF Core (this replaces the plain AddDbContext call)
+builder.Services.AddIdentityServices(connectionString);
+
+// Register your repositories
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -21,7 +30,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -30,6 +38,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Add authentication before authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -1,17 +1,20 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebShop.Core.Entities;
-using Microsoft.EntityFrameworkCore;
+using WebShop.Infra.Identity;
 using WebShop.Infra.Persistence.Configuration;
 
 
 
 namespace WebShop.Infra.Persistence
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
+
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

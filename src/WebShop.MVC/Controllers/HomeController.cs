@@ -20,6 +20,7 @@ namespace WebShop.MVC.Controllers
             _cartService = cartService;
             _categoryRepository = categoryRepository;
         }
+
         public async Task<IActionResult> Index(int? CategoryId)
         {
             var categories = (await _categoryRepository.GetAllAsync()).Select(c => new CategoryViewModel

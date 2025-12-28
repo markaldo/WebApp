@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Register";
 }
-
+@model WebShop.MVC.Models.RegisterViewModel
 <div class="mobile-header-active mobile-header-wrapper-style">
     <div class="mobile-header-wrapper-inner">
         <div class="mobile-header-top">
@@ -204,9 +204,13 @@
                                 <div class="padding_eight_all bg-white">
                                     <div class="heading_s1">
                                         <h1 class="mb-5">Create an Account</h1>
-                                        <p class="mb-30">Already have an account? <a href="page-login.html">Login</a></p>
+                                        <p class="mb-30">
+                                            Already have an account?
+                                            <a asp-controller="Account" asp-action="Login">Login</a>
+                                        </p>
+
                                     </div>
-                                    <form method="post">
+                                    @* <form method="post">
                                         <div class="form-group">
                                             <input type="text" required="" name="username" placeholder="Username" />
                                         </div>
@@ -253,7 +257,64 @@
                                             <button type="submit" class="btn btn-fill-out btn-block hover-up font-weight-bold" name="login">Submit &amp; Register</button>
                                         </div>
                                         <p class="font-xs text-muted"><strong>Note:</strong>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy</p>
+                                    </form> *@
+                                    <form asp-action="Register" method="post">
+                                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                                        <div class="form-group">
+                                            <label asp-for="DisplayName"></label>
+                                            <input asp-for="DisplayName" class="form-control" placeholder="Username" />
+                                            <span asp-validation-for="DisplayName" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="Email"></label>
+                                            <input asp-for="Email" class="form-control" placeholder="Email" />
+                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="Password"></label>
+                                            <input asp-for="Password" class="form-control" type="password" placeholder="Password" />
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="ConfirmPassword"></label>
+                                            <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirm password" />
+                                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="payment_option mb-50">
+                                            <div class="custome-radio">
+                                                <input asp-for="IsVendor" class="form-check-input" type="radio" value="false" id="customerRadio" checked />
+                                                <label class="form-check-label" for="customerRadio">I am a customer</label>
+                                            </div>
+                                            <div class="custome-radio">
+                                                <input asp-for="IsVendor" class="form-check-input" type="radio" value="true" id="vendorRadio" />
+                                                <label class="form-check-label" for="vendorRadio">I am a vendor</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="login_footer form-group mb-50">
+                                            <div class="custome-checkbox">
+                                                <input class="form-check-input" type="checkbox" id="termsCheckbox" required />
+                                                <label class="form-check-label" for="termsCheckbox"><span>I agree to terms &amp; Policy.</span></label>
+                                            </div>
+                                            <a asp-controller="Home" asp-action="Privacy"><i class="fi-rs-book-alt mr-5 text-muted"></i>Learn more</a>
+                                        </div>
+
+                                        <div class="form-group mb-30">
+                                            <button type="submit" class="btn btn-fill-out btn-block hover-up font-weight-bold">Submit &amp; Register</button>
+                                        </div>
+
+                                        <p class="font-xs text-muted">
+                                            <strong>Note:</strong> Your personal data will be used to support your experience throughout this website,
+                                            to manage access to your account, and for other purposes described in our privacy policy.
+                                        </p>
                                     </form>
+
+
                                 </div>
                             </div>
                         </div>

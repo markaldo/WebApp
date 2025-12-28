@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.22" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WebShop.Core\WebShop.Core.csproj" />
     <ProjectReference Include="..\WebShop.Infra\WebShop.Infra.csproj" />
   </ItemGroup>
