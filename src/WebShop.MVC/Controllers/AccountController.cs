@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 using WebShop.Infra.Identity;
 using WebShop.MVC.Models; // your view models (RegisterViewModel, LoginViewModel, ChangePasswordViewModel, ResetPasswordViewModel)
 
@@ -24,7 +25,71 @@ namespace WebShop.MVC.Controllers
         }
 
         // GET: /Account/Index
-        public IActionResult Account() => View();
+        //public IActionResult Account() => View();
+
+        // GET: /Account/Account
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Account()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToAction("Login");
+
+            var model = new AccountOverviewViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                DisplayName = user.DisplayName,
+                Email = user.Email,
+                Address = user.Address
+            };
+
+            return View(model);
+        }
+        // POST: /Account/Account
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Account(AccountOverviewViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToAction("Login");
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.DisplayName = model.DisplayName;
+            user.Address = model.Address;
+
+            // If you want to allow changing email:
+            if (user.Email != model.Email)
+            {
+                user.Email = model.Email;
+                user.UserName = model.Email;
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+
+                return View(model);
+            }
+
+            // So updated info is reflected in the cookie (e.g. DisplayName)
+            await _signInManager.RefreshSignInAsync(user);
+
+            TempData["Message"] = "Account updated successfully.";
+            return RedirectToAction(nameof(Account));
+        }
+
+
 
         // GET: /Account/Login
         [HttpGet]
@@ -54,6 +119,7 @@ namespace WebShop.MVC.Controllers
 
             return View(model);
         }
+
         //Post: /Account/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -159,6 +225,7 @@ namespace WebShop.MVC.Controllers
 
                 return View(model);
             }
+            await _signInManager.SignOutAsync();
 
             return RedirectToAction("Login", "Account");
         }
