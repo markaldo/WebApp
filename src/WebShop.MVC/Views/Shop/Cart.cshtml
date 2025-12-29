@@ -129,7 +129,7 @@
                                             <h6 class="text-muted">Subtotal</h6>
                                         </td>
                                         <td class="carttotalamount">
-                                            <h4 class="text-brand text-end">@ViewBag.Subtotal.ToString("C")</h4>
+                                            <h4 id="cart-subtotal" class="text-brand text-end">@ViewBag.Subtotal.ToString("C")</h4>
                                         </td>
                                     </tr>
                                     <tr>
@@ -160,10 +160,10 @@
                                     </tr>
                                     <tr>
                                         <td class="carttotallabel">
-                                            <h6 class="text-muted">Total</h6>
+                                            <h6 class="text-muted">Total + 12% VAT</h6>
                                         </td>
                                         <td class="carttotalamount">
-                                            <h4 class="text-brand text-end">@ViewBag.Total.ToString("C")</h4>
+                                            <h4 id="cart-grandtotal" class="text-brand text-end">@ViewBag.Total.ToString("C")</h4>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -181,11 +181,11 @@
                         <div class="calculate-shiping p-40 border-radius-15 border">
                             <h4 class="mb-10">Calculate Shipping</h4>
                             <p class="mb-30"><span class="font-lg text-muted">Flat rate:</span><strong class="text-brand">5%</strong></p>
-                            <form class="field_form shipping_calculator">
+                            <form name="shipping-form" class="field_form shipping_calculator">
                                 <div class="form-row">
                                     <div class="form-group col-lg-12">
                                         <div class="custom_select">
-                                            <select class="form-control select-active w-100">
+                                            <select name="location-opt" class="form-control select-active w-100">
                                                 <option value="">United Kingdom</option>
                                                 <option value="AX">Aland Islands</option>
                                                 <option value="AF">Afghanistan</option>
@@ -437,10 +437,10 @@
                                 </div>
                                 <div class="form-row row">
                                     <div class="form-group col-lg-6">
-                                        <input required="required" placeholder="State / Country" name="name" type="text">
+                                        <input required="required" placeholder="State / Country" name="state" type="text">
                                     </div>
                                     <div class="form-group col-lg-6">
-                                        <input required="required" placeholder="PostCode / ZIP" name="name" type="text">
+                                        <input required="required" placeholder="PostCode / ZIP" name="postal-code" type="text" autocomplete="off">
                                     </div>
                                 </div>
                             </form>
@@ -465,101 +465,7 @@
 </main>
 
 @section Scripts {
-    <script>
-        $(document).ready(function() {
-            // Prevent multiple bindings
-            $(document).off('click', '.qty-up, .qty-down, .delete-cart-item');
-            $(document).off('submit', '.qty-form');
-
-            // Quantity handlers
-            $(document).on('click', '.qty-up, .qty-down', function(e) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-
-                var $btn = $(this);
-                var $form = $btn.closest('.qty-form');
-                var $qtyInput = $form.find('.qty-val');
-                var currentQty = parseInt($qtyInput.val()) || 1;
-                var direction = parseInt($btn.data('direction'));
-                var newQty = Math.max(1, currentQty + direction);
-
-                $qtyInput.val(newQty);
-                $form.trigger('submit');
-            });
-
-            // Quantity form submission
-            $(document).on('submit', '.qty-form', function(e) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-
-                var $form = $(this);
-                var productId = $form.find('input[name="productId"]').val();
-
-                $form.find('.qty-up, .qty-down').prop('disabled', true);
-
-                $.ajax({
-                    url: '@Url.Action("UpdateCart", "Shop")',
-                    type: 'POST',
-                    data: { productId: productId, quantity: parseInt($form.find('.qty-val').val()) },
-                    success: function(response) {
-                        if (response.success) {
-                            $form.closest('tr').find('.price:last h4').text(response.lineTotal);
-                            $('.carttotalamount:last h4').text(response.cartTotal);
-                            $('.text-brand').first().text(response.remainingItems);
-                            $('#header-cart-container-2').load('@Url.Action("HeaderCartFragment", "Home")');
-                        }
-                    },
-                    error: function() {
-                        location.reload();
-                    },
-                    complete: function() {
-                        $form.find('.qty-up, .qty-down').prop('disabled', false);
-                    }
-                });
-            });
-
-            // delete handler
-            $(document).on('click', '.delete-cart-item', function(e) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-
-                var $deleteBtn = $(this);
-                var productId = $deleteBtn.data('product-id');
-                var $row = $deleteBtn.closest('tr');
-
-                if (!confirm('Remove this item from cart?')) return;
-
-                $deleteBtn.html('<i class="fi-rs-spinner spinner"></i>');
-
-                $.ajax({
-                    url: '@Url.Action("RemoveFromCart", "Shop")',
-                    type: 'POST',
-                    data: { productId: productId },
-                    success: function(response) {
-                        if (response.success) {
-                            $row.fadeOut(300, function() {
-                                $(this).remove();
-                            });
-
-                            $('.text-brand').first().text(response.remainingItems);
-                            $('.carttotalamount:last h4').text(response.cartTotal);
-                            $('#header-cart-container-2').load('@Url.Action("HeaderCartFragment", "Home")');
-
-                            if (response.remainingItems === 0) {
-                                $('.shopping-summery table tbody').html(
-                                    '<tr><td colspan="7" class="text-center py-5"><em>Cart is now empty</em></td></tr>'
-                                );
-                            }
-                        }
-                    },
-                    error: function() {
-                        $deleteBtn.html('<i class="fi-rs-trash"></i>');
-                        alert('Error removing item');
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="~/assets/js/cart-control.js"></script>
 }
 
 

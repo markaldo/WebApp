@@ -15,11 +15,13 @@ namespace WebShop.MVC.Controllers
         
         private readonly ILogger<ShopController> _logger;
         private readonly IShoppingCartService _cartService;
+        private readonly IWishlistService _wishlistService;
 
-        public ShopController(ILogger<ShopController> logger , IShoppingCartService cartService /*, IProductService products*/)
+        public ShopController(ILogger<ShopController> logger, IShoppingCartService cartService, IWishlistService wishlistService /*, IProductService products*/)
         {
             _logger = logger;
             _cartService = cartService;
+            _wishlistService = wishlistService;
             // _products = products;
         }
 
@@ -41,7 +43,7 @@ namespace WebShop.MVC.Controllers
             return Json(new
             {
                 success = true,
-                totalItems = totalItems,
+                // totalItems = totalItems,
                 totalPrice = totalPrice.ToString("C")
             });
         }
@@ -61,7 +63,6 @@ namespace WebShop.MVC.Controllers
         {
             quantity = Math.Max(0, quantity);
 
-            // Get fresh data from updated cart
             await _cartService.UpdateQuantityAsync(productId, quantity);
             var items = await _cartService.GetCartItemsAsync();
             var total = await _cartService.GetTotalAsync();
@@ -72,7 +73,8 @@ namespace WebShop.MVC.Controllers
                 success = true,
                 newQuantity = quantity,
                 lineTotal = updatedItem?.LineTotal.ToString("C") ?? "£0.00",
-                cartTotal = total.ToString("C"),
+                subTotal = total.ToString("C"),
+                cartTotal = (total * (decimal)1.12).ToString("C"),
                 itemCount = items.Sum(i => i.Quantity),  
                 remainingItems = items.Count()
             });
@@ -91,7 +93,8 @@ namespace WebShop.MVC.Controllers
             return Json(new
             {
                 success = true,
-                cartTotal = total.ToString("C"),
+                subTotal = total.ToString("C"),
+                cartTotal = (total * (decimal)1.12).ToString("C"),
                 itemCount = items.Sum(i => i.Quantity),           
                 remainingItems = items.Count(i => i.Quantity > 0) 
             });
@@ -143,5 +146,118 @@ namespace WebShop.MVC.Controllers
 
             return html;
         }
+
+        public IActionResult HeaderCartFragment()
+        {
+            return ViewComponent("CartHeader");
+        }
+
+        // GET: /Shop/Wishlist
+        public async Task<IActionResult> Wishlist()
+        {
+            var items = await _wishlistService.GetWishlistAsync();
+            return View(items);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToWishlist(int productId)
+        {
+            await _wishlistService.AddToWishlistAsync(productId);
+            return NoContent(); 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromWishlist(int productId)
+        {
+            await _wishlistService.RemoveFromWishlistAsync(productId);
+            var wishlist = await _wishlistService.GetWishlistAsync();
+            return Json(new { success = true, count = wishlist.Count() });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MoveToCart(int productId)
+        {
+            await _cartService.AddToCartAsync(productId, 1);
+            await _wishlistService.RemoveFromWishlistAsync(productId);
+            Console.WriteLine(productId);
+    
+            var wishlist = await _wishlistService.GetWishlistAsync();
+            var cartCount = await _cartService.GetCartItemsAsync(); 
+            HeaderCartFragment();
+    
+            return Json(new { 
+                success = true, 
+                wishlistCount = wishlist.Count(),
+                cartCount = cartCount.Count()
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MoveAllToCart()
+        {
+            var items = await _wishlistService.GetWishlistAsync();
+            foreach (var item in items)
+            {
+                await _cartService.AddToCartAsync(item.ProductId, 1);
+            }
+            await _wishlistService.ClearWishlistAsync();
+            return RedirectToAction("Cart");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleWishlist([FromBody] ToggleWishlistRequest request)
+        {
+            if (request.ProductId <= 0) return BadRequest();
+
+            var isInWishlist = await _wishlistService.IsInWishlistAsync(request.ProductId);
+
+            if (isInWishlist)
+            {
+                await _wishlistService.RemoveFromWishlistAsync(request.ProductId);
+            }
+            else
+            {
+                await _wishlistService.AddToWishlistAsync(request.ProductId);
+            }
+
+            return Ok();
+        }
+
+        public class ToggleWishlistRequest
+        {
+            public int ProductId { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckWishlistItems([FromBody] CheckWishlistRequest request)
+        {
+            var productIds = request.ProductIds ?? new List<int>();
+            var wishlistItems = await _wishlistService.GetWishlistAsync();
+            var inWishlist = wishlistItems.Select(x => x.ProductId).ToList();
+
+            return Json(new { inWishlist = inWishlist });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckWishlistItem([FromBody] ToggleWishlistRequest request)
+        {
+            var isInWishlist = await _wishlistService.IsInWishlistAsync(request.ProductId);
+            return Json(new { isInWishlist = isInWishlist });
+        }
+
+        public class CheckWishlistRequest
+        {
+            public List<int> ProductIds { get; set; } = new();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetWishlistCount()
+        {
+            var items = await _wishlistService.GetWishlistAsync();
+            var count = items.Count();
+
+            return Json(new { count });
+        }
+
     }
 }
