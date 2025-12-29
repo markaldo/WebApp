@@ -4,6 +4,7 @@ using WebShop.Infra;
 using WebShop.Infra.Persistence;
 using WebShop.Infra.Repositories;
 using WebShop.Infra.DependencyInjection; // contains AddIdentityServices extension
+using WebShop.Infra.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IWishlistService, WishlistService>();
+builder.Services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
 
 var app = builder.Build();
 

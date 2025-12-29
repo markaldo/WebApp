@@ -2,9 +2,12 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+@{
+    ViewBag.HideHeaderBottom = true;
+}
 @model HomeViewModel
-    <div class="container mb-30">
-        <div class="row flex-row-reverse">
+<div class="container mb-30 index-page">
+    <div class="row flex-row-reverse">
         <div class="row flex-row-reverse">
             <div class="col-lg-4-5">
                 <section class="product-tabs section-padding position-relative">
@@ -29,7 +32,9 @@
                                                     </a>
                                                 </div>
                                                 <div class="product-action-1" style="display: flex; gap: 5px;">
-                                                    <a aria-label="Add To Wishlist" class="action-btn" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                                    <a aria-label="Add To Wishlist" href="javascript:void(0)" class="action-btn wishlist-btn" data-product-id="@product.Id">
+                                                        <i class="fi-rs-heart"></i>
+                                                    </a>
                                                     <a aria-label="Compare" class="action-btn" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                                     <a aria-label="Quick view" class="action-btn" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
                                                 </div>
@@ -143,54 +148,7 @@
 }
 
 @section Scripts {
-    <script>
-            $(document).ready(function() {
-            $('.add-cart-btn').click(function(e) {
-                e.preventDefault();
-
-                var btn = $(this);
-                var productId = btn.data('product-id');
-                var productName = btn.data('product-name');
-
-                // loading state
-                var originalHtml = btn.html();
-                btn.prop('disabled', true)
-                   .html('<i class="fi-rs-spinner spinner mr-5"></i>Adding...');
-
-                // ajax call
-                $.ajax({
-                    url: '@Url.Action("AddToCart", "Shop")',
-                    type: 'POST',
-                    data: { id: productId, quantity: 1 },
-                    success: function(response) {
-                        if (response.success) {
-                            // success state - "Added!"
-                            btn.html('<i class="fi-rs-check text-success mr-5"></i>Added!');
-
-                            // update cart counter in header (ViewComponent)
-                            $('#cart-count').text(response.totalItems);
-                            if (response.totalItems > 0) {
-                                $('#cart-count').show();
-                            }
-
-                            // reload cart dropdown via ViewComponent fragment
-                            $('#header-cart-container-2').load('@Url.Action("HeaderCartFragment", "Home")');
-
-                            // return original state
-                            setTimeout(function() {
-                                btn.html(originalHtml)
-                                   .prop('disabled', false);
-                            }, 2000);
-                        }
-                    },
-                    error: function() {
-                        // error state - back to original
-                        btn.html(originalHtml).prop('disabled', false);
-                        alert('Error adding to cart');
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="~/assets/js/cart-add.js"></script>
+    <script src="~/assets/js/index-wishlist-fun.js"></script>
 }
 
