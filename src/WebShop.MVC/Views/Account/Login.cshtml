@@ -6,7 +6,7 @@
     <div class="mobile-header-wrapper-inner">
         <div class="mobile-header-top">
             <div class="mobile-header-logo">
-                <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo" /></a>
+                <a href="index.html"><img src="~/assets/imgs/theme/logo.svg" alt="logo" /></a>
             </div>
             <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
                 <button class="close-style search-close">
@@ -174,11 +174,11 @@
             </div>
             <div class="mobile-social-icon mb-50">
                 <h6 class="mb-15">Follow Us</h6>
-                <a href="#"><img src="assets/imgs/theme/icons/icon-facebook-white.svg" alt="" /></a>
-                <a href="#"><img src="assets/imgs/theme/icons/icon-twitter-white.svg" alt="" /></a>
-                <a href="#"><img src="assets/imgs/theme/icons/icon-instagram-white.svg" alt="" /></a>
-                <a href="#"><img src="assets/imgs/theme/icons/icon-pinterest-white.svg" alt="" /></a>
-                <a href="#"><img src="assets/imgs/theme/icons/icon-youtube-white.svg" alt="" /></a>
+                <a href="#"><img src="~/assets/imgs/theme/icons/icon-facebook-white.svg" alt="" /></a>
+                <a href="#"><img src="~/assets/imgs/theme/icons/icon-twitter-white.svg" alt="" /></a>
+                <a href="#"><img src="~/assets/imgs/theme/icons/icon-instagram-white.svg" alt="" /></a>
+                <a href="#"><img src="~/assets/imgs/theme/icons/icon-pinterest-white.svg" alt="" /></a>
+                <a href="#"><img src="~/assets/imgs/theme/icons/icon-youtube-white.svg" alt="" /></a>
             </div>
             <div class="site-copyright">Copyright 2022 © Nest. All rights reserved. Powered by AliThemes.</div>
         </div>
@@ -200,7 +200,7 @@
                 <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
                     <div class="row">
                         <div class="col-lg-6 pr-30 d-none d-lg-block">
-                            <img class="border-radius-15" src="assets/imgs/page/login-1.png" alt="" />
+                            <img class="border-radius-15" src="~/assets/imgs/page/login-1.png" alt="" />
                         </div>
                         <div class="col-lg-6 col-md-8">
                             <div class="login_wrap widget-taber-content background-white">
@@ -213,37 +213,7 @@
                                         </p>
 
                                     </div>
-                                    @* <form method="post">
-                                        <div class="form-group">
-                                            <input type="text" required="" name="email" placeholder="Username or Email *" />
-                                        </div>
-                                        <div class="form-group">
-                                            <input required="" type="password" name="password" placeholder="Your password *" />
-                                        </div>
-                                        <div class="login_footer form-group">
-                                            <div class="chek-form">
-                                                <input type="text" required="" name="email" placeholder="Security code *" />
-                                            </div>
-                                            <span class="security-code">
-                                                <b class="text-new">8</b>
-                                                <b class="text-hot">6</b>
-                                                <b class="text-sale">7</b>
-                                                <b class="text-best">5</b>
-                                            </span>
-                                        </div>
-                                        <div class="login_footer form-group mb-50">
-                                            <div class="chek-form">
-                                                <div class="custome-checkbox">
-                                                    <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
-                                                    <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
-                                                </div>
-                                            </div>
-                                            <a class="text-muted" href="#">Forgot password?</a>
-                                        </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-heading btn-block hover-up" name="login">Log in</button>
-                                        </div>
-                                    </form> *@
+                                    
                                     <form asp-action="Login" method="post">
                                         <div asp-validation-summary="All"></div>
 

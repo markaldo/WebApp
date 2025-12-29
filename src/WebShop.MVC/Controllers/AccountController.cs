@@ -86,7 +86,7 @@ namespace WebShop.MVC.Controllers
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
+                //await _signInManager.SignInAsync(user, false);
                 return RedirectToAction("Login", "Account");
             }
 

@@ -170,7 +170,7 @@
                                     </div>
                                 </div> *@
                                 <div class="header-action-icon-2">
-                                    <a asp-controller="Account" asp-action="Account">
+                                    <a asp-controller="Account" asp-action="Login">
                                         <img class="svgInject" alt="Nest" src="~/assets/imgs/theme/icons/icon-user.svg" />
                                     </a>
 
@@ -198,9 +198,9 @@
                                                 <li><a asp-controller="Account" asp-action="Account"><i class="fi fi-rs-settings-sliders mr-10"></i>Setting</a></li>
                                                 <li>
                                                     <form asp-controller="Account" asp-action="Logout" method="post">
-                                                        <button type="submit" class="menu-link">
+                                                        <a href="#" onclick="this.closest('form').submit(); return false;">
                                                             <i class="fi fi-rs-sign-out mr-10"></i>Sign out
-                                                        </button>
+                                                        </a>
                                                     </form>
                                                 </li>
                                             </ul>
