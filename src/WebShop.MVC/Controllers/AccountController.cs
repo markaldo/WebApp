@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 using WebShop.Infra.Identity;
 using WebShop.MVC.Models; // your view models (RegisterViewModel, LoginViewModel, ChangePasswordViewModel, ResetPasswordViewModel)
 
@@ -139,20 +137,25 @@ namespace WebShop.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
 
             var user = new ApplicationUser
             {
                 UserName = model.Email,
                 Email = model.Email,
-                DisplayName = model.DisplayName,
-                IsVendor = model.IsVendor
+                DisplayName = model.DisplayName
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
+
             if (result.Succeeded)
             {
-                //await _signInManager.SignInAsync(user, false);
+                if (model.IsVendor)
+                    await _userManager.AddToRoleAsync(user, "Vendor");
+                else
+                    await _userManager.AddToRoleAsync(user, "Customer");
+
                 return RedirectToAction("Login", "Account");
             }
 
@@ -171,7 +174,7 @@ namespace WebShop.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-          
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -186,7 +189,7 @@ namespace WebShop.MVC.Controllers
             }
 
             // No token needed — go directly to ResetPassword
-            return RedirectToAction("Reset", new ResetPasswordViewModel { Email = user.Email});
+            return RedirectToAction("Reset", new ResetPasswordViewModel { Email = user.Email });
 
         }
 
@@ -196,7 +199,7 @@ namespace WebShop.MVC.Controllers
 
         // GET: /Account/ResetPassword
         [HttpGet]
-        public IActionResult Reset( string email)
+        public IActionResult Reset(string email)
         {
             var model = new ResetPasswordViewModel { Email = email };
             return View(model);
@@ -207,7 +210,7 @@ namespace WebShop.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reset(ResetPasswordViewModel model)
         {
-            
+
             var user = await _userManager.FindByEmailAsync(model.Email);
             var remove = await _userManager.RemovePasswordAsync(user);
             if (!remove.Succeeded)
@@ -234,7 +237,7 @@ namespace WebShop.MVC.Controllers
         [HttpGet]
         public IActionResult Privacy() => RedirectToAction("Privacy", "Home");
 
-      
+
 
         // GET: /Account/ChangePassword
         [Authorize]

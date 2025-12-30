@@ -13,16 +13,26 @@ namespace WebShop.Infra.Repositories
         {
             _context = context;
         }
-
         public async Task<Product?> GetById(int id)
          => await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
-        public async Task<IEnumerable<Product>> GetAllAsync()   
+        public async Task<IEnumerable<Product>> GetAllAsync()
         => await _context.Products.Include(p => p.Category).ToListAsync();
 
         public async Task<IEnumerable<Product>> GetAllByCategoryIdAsync(int? categoryid)
         => await _context.Products.Include(p => p.Category)
             .Where(p => p.ProductCategoryId == categoryid).ToListAsync();
+        public async Task AddSync(Product product)
+       => await _context.Products.AddAsync(product);
+
+        public void UpdateSync(Product product)
+        => _context.Products.Update(product);
+
+        public void DeleteSync(Product product)
+        => _context.Products.Remove(product);
+
+        public async Task SaveChangeAsync()
+        => await _context.SaveChangesAsync();
         public async Task<Badge> GetBadgeAsync(Product product)
         {
             if (product.Badge != Badge.None)
@@ -45,18 +55,5 @@ namespace WebShop.Infra.Repositories
             }
             return Badge.None;
         }
-
-
-        public async Task AddSync(Product product)
-        => await _context.Products.AddAsync(product);
-
-        public void UpdateSync(Product product)
-        => _context.Products.Update(product);
-
-        public void DeleteSync(Product product)
-        => _context.Products.Remove(product);
-
-        public async Task SaveChangeAsync()
-        => await _context.SaveChangesAsync();
     }
 }

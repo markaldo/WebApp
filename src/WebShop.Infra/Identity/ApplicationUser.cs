@@ -9,7 +9,7 @@ namespace WebShop.Infra.Identity
     public class ApplicationUser : IdentityUser 
     {
         public string DisplayName { get; set; }
-        public bool IsVendor { get; set; }
+        //public bool IsVendor { get; set; }
 
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

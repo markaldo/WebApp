@@ -96,32 +96,65 @@
                 <div class="sidebar-widget widget-category-2 mb-30">
                     <h5 class="section-title style-1 mb-30">Category</h5>
                     <ul>
-                     @foreach (var category in Model.Categories)
-                        {
                         <li>
-                        <a asp-controller="Home" asp-action="Index" asp-route-categoryId="@category.CategoryId">
-                            <img src="~/assets/imgs/theme/icons/category-1.svg" alt="" /> @category.CategoryName
-                        </a>
-                        <span class="count">@Model.Products.Where(p => p.CategoryId == category.CategoryId).Count()</span>
+                            <a asp-controller="Home" asp-action="Index">
+                                <img src="~/assets/imgs/theme/icons/category-1.svg" alt="" />
+                                All Categories
+                            </a>
                         </li>
+
+                        @foreach (var category in Model.Categories)
+                        {
+                            <li>
+                                <a asp-controller="Home"
+                                   asp-action="Index"
+                                   asp-route-categoryId="@category.CategoryId">
+                                    <img src="~/assets/imgs/theme/icons/category-1.svg" alt="" />
+                                    @category.CategoryName
+                                </a>
+
+                                <span class="count">
+                                    @Model.Products.Count(p => p.CategoryId == category.CategoryId)
+                                </span>
+                            </li>
                         }
                     </ul>
-                  
                 </div>
-                <!-- Fillter By Price -->
-                <div class="sidebar-widget price_range range mb-30">
-                    <h5 class="section-title style-1 mb-30">Filter by price</h5>
-                    <div class="price-filter">
-                        <div class="price-filter-inner">
-                            <div id="slider-range" class="mb-20"></div>
-                            <div class="d-flex justify-content-between">
-                                <div class="caption">From: <strong id="slider-range-value1" class="text-brand"></strong></div>
-                                <div class="caption">To: <strong id="slider-range-value2" class="text-brand"></strong></div>
-                            </div>
+
+                <form method="get" asp-controller="Home" asp-action="Index">
+                    <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
+
+                    <div class="sidebar-widget price_range range mb-30">
+                        <h5 class="section-title style-1 mb-30">Filter by price</h5>
+
+                        <div class="mb-10">
+                            <label>Min Price</label>
+                            <input type="number" min="0" name="minPrice" class="form-control"
+                                   step="10" value="@Model.MinPrice" />
                         </div>
+
+                        <div class="mb-10">
+                            <label>Max Price</label>
+                            <input type="number" min="0" name="maxPrice" class="form-control"
+                                   step="10" value="@Model.MaxPrice" />
+                        </div>
+
+                        <div class="d-flex justify-content-center gap-3 mt-10">
+
+                            <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">
+                                <i class="fi-rs-filter mr-5"></i> Filter
+                            </button>
+
+                            <a asp-controller="Home"
+                               asp-action="Index"
+                               asp-route-categoryId="@Model.SelectedCategoryId"
+                               class="btn btn-sm btn-outline-secondary btn-primary rounded-pill px-3">
+                                <i class="fi-rs-refresh mr-5"></i> Reset
+                            </a>
+                        </div>
+
                     </div>
-                    <a asp-controller="Shop" asp-action="Index" class="btn btn-sm btn-default"><i class="fi-rs-filter mr-5"></i> Fillter</a>
-                </div>
+                </form>
             </div>
         </div>
     </div>

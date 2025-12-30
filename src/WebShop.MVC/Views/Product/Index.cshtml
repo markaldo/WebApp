@@ -1,0 +1,241 @@
+﻿@using WebShop.Core.Entities
+@model IEnumerable<ProductViewModel>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Products";
+    var categories = (List<CategoryViewModel>)ViewBag.Categories;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Products</h2>
+
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+        <i class="bi bi-plus-circle"></i> Add Product
+    </button>
+</div>
+
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Sale Price</th>
+            <th>Badge</th>
+            <th>Category</th>
+            <th style="width: 180px;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(p.ImageUrl))
+                    {
+                        <img src="~/assets/imgs/shop/@p.ImageUrl" width="50" height="50" style="object-fit:cover;" />
+                    }
+                </td>
+                <td>@p.ProductName</td>
+                <td>@p.Price</td>
+                <td>@p.SalePrice</td>
+                <td>@p.Badge</td>
+                <td>@categories.FirstOrDefault(c => c.CategoryId == p.CategoryId)?.CategoryName</td>
+
+                <td>
+                    <button class="btn btn-sm btn-success me-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editModal"
+                            data-id="@p.Id"
+                            data-name="@p.ProductName"
+                            data-price="@p.Price"
+                            data-sale="@p.SalePrice"
+                            data-image="@p.ImageUrl"
+                            data-badge="@p.Badge"
+                            data-category="@p.CategoryId">
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal"
+                            data-id="@p.Id">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="Product" asp-action="Create" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="form-label">Product Name</label>
+                        <input name="ProductName" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input name="Price" type="number" step="0.01" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Sale Price</label>
+                        <input name="SalePrice" type="number" step="0.01" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Image URL</label>
+                        <input name="ImageUrl" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Badge</label>
+                        <select name="Badge" class="form-select">
+                            @foreach (var badge in Enum.GetValues(typeof(Badge)))
+                            {
+                                <option value="@badge">@badge</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="CategoryId" class="form-select" required>
+                            @foreach (var c in categories)
+                            {
+                                <option value="@c.CategoryId">@c.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Create</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="Product" asp-action="Edit" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="edit-id" name="Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Product Name</label>
+                        <input id="edit-name" name="ProductName" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input id="edit-price" name="Price" type="number" step="0.01" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Sale Price</label>
+                        <input id="edit-sale" name="SalePrice" type="number" step="0.01" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Image URL</label>
+                        <input id="edit-image" name="ImageUrl" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Badge</label>
+                        <select id="edit-badge" name="Badge" class="form-select">
+                            @foreach (var badge in Enum.GetValues(typeof(Badge)))
+                            {
+                                <option value="@badge">@badge</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select id="edit-category" name="CategoryId" class="form-select" required>
+                            @foreach (var c in categories)
+                            {
+                                <option value="@c.CategoryId">@c.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-success" type="submit">Save</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-controller="Product" asp-action="Delete" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this product?</p>
+                    <input type="hidden" id="delete-id" name="id" />
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var editModal = document.getElementById('editModal');
+    editModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+
+        document.getElementById('edit-id').value = button.getAttribute('data-id');
+        document.getElementById('edit-name').value = button.getAttribute('data-name');
+        document.getElementById('edit-price').value = button.getAttribute('data-price');
+        document.getElementById('edit-sale').value = button.getAttribute('data-sale');
+        document.getElementById('edit-image').value = button.getAttribute('data-image');
+        document.getElementById('edit-badge').value = button.getAttribute('data-badge');
+        document.getElementById('edit-category').value = button.getAttribute('data-category');
+    });
+
+    var deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        document.getElementById('delete-id').value = button.getAttribute('data-id');
+    });
+</script>

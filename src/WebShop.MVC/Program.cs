@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebShop.Core.Repositories;
 using WebShop.Infra;
+using WebShop.Infra.DependencyInjection; // contains AddIdentityServices extension
+using WebShop.Infra.Identity;
 using WebShop.Infra.Persistence;
 using WebShop.Infra.Repositories;
-using WebShop.Infra.DependencyInjection; // contains AddIdentityServices extension
 using WebShop.Infra.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +30,18 @@ builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var config = services.GetRequiredService<IConfiguration>();
+
+    await IdentitySeeder.SeedRolesAsync(roleManager);
+    await IdentitySeeder.SeedAdminUserAsync(userManager, roleManager, config);
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

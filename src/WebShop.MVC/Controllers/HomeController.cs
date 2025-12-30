@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WebShop.Core.Repositories;
@@ -13,7 +12,7 @@ namespace WebShop.MVC.Controllers
         private readonly IShoppingCartService _cartService;
         private readonly ICategoryRepository _categoryRepository;
 
-        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, IShoppingCartService cartService,ICategoryRepository categoryRepository)
+        public HomeController(ILogger<HomeController> logger, IProductRepository productRepository, IShoppingCartService cartService, ICategoryRepository categoryRepository)
         {
             _logger = logger;
             _productRepository = productRepository;
@@ -21,7 +20,7 @@ namespace WebShop.MVC.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        public async Task<IActionResult> Index(int? CategoryId)
+        public async Task<IActionResult> Index(int? CategoryId, decimal? minPrice, decimal? maxPrice)
         {
             var categories = (await _categoryRepository.GetAllAsync()).Select(c => new CategoryViewModel
             {
@@ -32,6 +31,14 @@ namespace WebShop.MVC.Controllers
             var productsSource = CategoryId.HasValue
                 ? await _productRepository.GetAllByCategoryIdAsync(CategoryId.Value)
                 : await _productRepository.GetAllAsync();
+            if (minPrice.HasValue)
+            {
+                productsSource = productsSource.Where(p => p.Price >= minPrice);
+            }
+            if (maxPrice.HasValue)
+            {
+                productsSource = productsSource.Where(p => p.Price <= maxPrice);
+            }
 
             var products = new List<ProductViewModel>();
             foreach (var p in productsSource)
@@ -51,12 +58,14 @@ namespace WebShop.MVC.Controllers
                 });
             }
 
-            var cartCount = (await _cartService.GetCartItemsAsync()).Sum(item => item.Quantity);
+
             var viewModel = new HomeViewModel()
             {
                 Products = products,
                 Categories = categories,
-                CartItemCount = cartCount  
+                SelectedCategoryId = CategoryId,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice
             };
 
             return View(viewModel);
@@ -72,7 +81,7 @@ namespace WebShop.MVC.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-          
+
         public IActionResult HeaderCartFragment()
         {
             return ViewComponent("CartHeader");
