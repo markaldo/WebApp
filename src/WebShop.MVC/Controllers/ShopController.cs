@@ -1,10 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Security.Claims;
+using System.Text.Json;
 using WebShop.Core.Entities;
 using WebShop.Core.Repositories;
+using WebShop.Infra.DependencyInjection;
+using WebShop.Infra.Identity;
 using WebShop.Infra.Persistence;
 using WebShop.MVC.Models;
 
@@ -16,12 +22,16 @@ namespace WebShop.MVC.Controllers
         private readonly ILogger<ShopController> _logger;
         private readonly IShoppingCartService _cartService;
         private readonly IWishlistService _wishlistService;
+        private readonly IOrderRepository _orderService;
+        private readonly IAddress _addressService;
 
-        public ShopController(ILogger<ShopController> logger, IShoppingCartService cartService, IWishlistService wishlistService /*, IProductService products*/)
+        public ShopController(ILogger<ShopController> logger, IShoppingCartService cartService, IWishlistService wishlistService /*, IProductService products*/, IOrderRepository orderService, IAddress addressService)
         {
             _logger = logger;
             _cartService = cartService;
             _wishlistService = wishlistService;
+            _orderService = orderService;
+            _addressService = addressService;
             // _products = products;
         }
 
@@ -257,6 +267,201 @@ namespace WebShop.MVC.Controllers
             var count = items.Count();
 
             return Json(new { count });
+        }
+
+        // Checkout Section
+
+        [HttpGet]
+        public async Task<IActionResult> Checkout()
+        {
+            var cartItems = await _cartService.GetCartItemsAsync();
+            if (!cartItems.Any()) return RedirectToAction("Cart");
+
+            ViewBag.OrderTotal = await _cartService.GetTotalAsync();  
+            ViewBag.CartItems = cartItems;                            
+
+            var model = new CheckoutViewModel
+            {
+                OrderTotal = (decimal)ViewBag.OrderTotal,
+                ItemCount = cartItems.Sum(i => i.Quantity)
+            };
+            return View(model); 
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout(CheckoutViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var cart_Items = await _cartService.GetCartItemsAsync();
+                ViewBag.Total = await _cartService.GetTotalAsync();
+                ViewBag.CartItems = cart_Items;
+                return View(model);
+            }
+
+            var cartItems = await _cartService.GetCartItemsAsync();
+            var total = await _cartService.GetTotalAsync();
+
+            string? userId = User?.Identity?.IsAuthenticated == true
+                ? User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                : null;
+
+            if (userId == null)
+            {
+                var guestAddress = new GuestAddressDto
+                {
+                    AddressLine1 = model.AddressLine1,
+                    AddressLine2 = model.AddressLine2,
+                    City = model.City,
+                    PostalCode = model.PostalCode,
+                    Country = model.Country,
+                    Phone = model.Phone,
+                    AdditionalInfo = model.AdditionalInfo ?? string.Empty
+                };
+
+                var json = JsonSerializer.Serialize(guestAddress);
+
+                Response.Cookies.Append("GuestAddress", json, new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddHours(1), 
+                    HttpOnly = true,
+                    Secure = Request.IsHttps,
+                    IsEssential = true
+                });
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var userAddresses = await _addressService.GetUserAddressesAsync(userId);
+                    Address? defaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
+
+                    if (defaultAddress == null)
+                    {
+                        defaultAddress = CreateAddressFromModel(model, userId);
+                        await _addressService.SaveAddressAsync(defaultAddress);
+                    }
+                    else if (model.SaveAddress)
+                    {
+                        var newAddress = CreateAddressFromModel(model, userId);
+                        newAddress.IsDefault = false;
+                        await _addressService.SaveAddressAsync(newAddress);
+                    }
+                }
+            }
+
+            var order = new Order
+            {
+                TotalPrice = total,
+                OrderDate = DateTime.UtcNow,
+                UserId = userId,
+                AdditionalInfo = model.Phone ?? "",
+                OrderLines = new List<OrderLine>()
+            };
+
+            var orderId = await _orderService.CreateOrderAsync(order, cartItems);
+            await _cartService.ClearCartAsync();
+
+            return RedirectToAction("OrderConfirmation", new { orderId });
+        }
+
+        private Address CreateAddressFromModel(CheckoutViewModel model, string userId)
+        {
+            return new Address
+            {
+                UserId = userId,
+                LocationType = model.AddressName ?? "Home",
+                AddressLine1 = model.AddressLine1,
+                AddressLine2 = model.AddressLine2,
+                City = model.City,
+                PostalCode = model.PostalCode,
+                Country = model.Country,
+                AdditionalInfo = model.AdditionalInfo ?? "",
+                IsDefault = true
+            };
+        }
+
+        private string GetGuestUserIdFromCookie()
+        {
+            if (Request.Cookies.TryGetValue("GuestUserId", out var guestId))
+                return guestId;
+
+            var newGuestId = Guid.NewGuid().ToString("N")[..8];
+            Response.Cookies.Append("GuestUserId", newGuestId, new CookieOptions
+            {
+                Expires = DateTime.UtcNow.AddDays(30),
+                HttpOnly = true,
+                Secure = Request.IsHttps
+            });
+            return newGuestId;
+        }
+
+        private async Task<List<SelectListItem>> LoadUserAddresses(string userId)
+        {
+            var addresses = await _addressService.GetUserAddressesAsync(userId);
+            return addresses.Select(a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = $"{a.AddressLine1} - {a.City}, {a.PostalCode}",
+                Selected = a.IsDefault
+            }).ToList();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderConfirmation(int orderId)
+        {
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            if (order == null) return NotFound();
+
+            return View(order);  
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrderDetails(int orderId)
+        {
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            if (order == null) return NotFound();
+
+            return Json(new
+            {
+                orderNumber = order.Id.ToString(),  
+                totalAmount = order.TotalPrice.ToString("C"),
+                orderDate = order.OrderDate.ToString("dd MMM yyyy HH:mm")
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Invoice(int orderId)
+        {
+            var order = await _orderService.GetOrderByIdAsync(orderId);
+            if (order == null) return NotFound();
+
+            var model = new InvoiceViewModel { Order = order };
+
+            if (!string.IsNullOrEmpty(order.UserId))
+            {
+                var addresses = await _addressService.GetUserAddressesAsync(order.UserId);
+                model.Address = addresses.FirstOrDefault(a => a.IsDefault);
+            }
+            else
+            {
+                if (Request.Cookies.TryGetValue("GuestAddress", out var guestJson))
+                {
+                    try
+                    {
+                        var guestAddress = JsonSerializer.Deserialize<GuestAddressDto>(guestJson);
+                        model.GuestAddress = guestAddress;
+                        Response.Cookies.Delete("GuestAddress");
+                    }
+                    catch
+                    {
+                        
+                    }
+                }
+            }
+
+            return View(model);
         }
 
     }

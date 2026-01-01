@@ -40,7 +40,7 @@ namespace WebShop.MVC.Controllers
                 LastName = user.LastName,
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                Address = user.Address
+                Address = user.Addresses.FirstOrDefault().ToString()
             };
 
             return View(model);
@@ -61,7 +61,13 @@ namespace WebShop.MVC.Controllers
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.DisplayName = model.DisplayName;
-            user.Address = model.Address;
+            var newAddress = new Address
+            {
+                UserId = user.Id,
+                LocationType = model.Address ?? "Home",
+            };
+
+            user.Addresses.Add(newAddress);
 
             // If you want to allow changing email:
             if (user.Email != model.Email)

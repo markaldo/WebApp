@@ -1,0 +1,81 @@
+﻿@model WebShop.MVC.Models.InvoiceViewModel
+<div class="border p-40">
+    <div class="invoice-header">
+        <h1>INVOICE</h1>
+        <h2>#@Model.Order.Id</h2>
+        <p>Order Date: @Model.Order.OrderDate.ToString("dd MMM yyyy HH:mm")</p>
+    </div>
+
+    <div class="invoice-details">
+        <div>
+            <h3>MK-NAM-JD Store </h3>
+            <p>Brongo 2 <br>Wola Warsaw<br> 00-001 Poland</p>
+        </div>
+        <div class="shipping-address">
+            <h4>Ship To:</h4>
+            <p>
+                @if (Model.Address != null)
+                {
+                    @Model.Address.AddressLine1
+                
+                    <br>
+                    @if (!string.IsNullOrEmpty(Model.Address.AddressLine2))
+                    {
+                        @Model.Address.AddressLine2
+                
+                        <br>
+                    }
+                        @Model.Address.City
+                        @Model.Address.PostalCode<br>
+                        @Model.Address.Country<br>
+                        @Model.Address.AdditionalInfo<br> 
+                        < small > @Model.Address.LocationType Address </ small >
+                    }
+                else if (Model.GuestAddress != null)
+                {
+                    <em>@Model.GuestAddress.AddressLine1 </em>
+                    @if (!string.IsNullOrEmpty(Model.GuestAddress.AddressLine2))
+                    {
+                         @Model.GuestAddress.AddressLine2 
+                    }
+                        <br>@Model.GuestAddress.City<br/>
+                        @Model.GuestAddress.PostalCode <br/>
+                        @Model.GuestAddress.Country <br/>
+                        <br>@Model.GuestAddress.Phone <br/>
+                    }
+                else
+                {
+                    <em>Guest Order - Address from checkout not available.</em>
+                }
+            </p>
+        </div>
+    </div>
+
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Order.OrderLines)
+            {
+                <tr>
+                    <td>@item.Product.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.SubTotal.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="invoice-total">
+        <p><strong>Total: @Model.Order.TotalPrice.ToString("C")</strong></p>
+    </div>
+
+    <div style="text-align: center; margin-top: 50px;">
+        <p>Thank you for your business!</p>
+    </div>
+</div>

@@ -9,8 +9,6 @@ using WebShop.Core.Entities;
 using WebShop.Infra.Identity;
 using WebShop.Infra.Persistence.Configuration;
 
-
-
 namespace WebShop.Infra.Persistence
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
@@ -20,11 +18,9 @@ namespace WebShop.Infra.Persistence
 
         public DbSet<Product> Products { get; set; }    
         public DbSet<ProductCategory> Categories { get; set; }
-
         public DbSet<Order> Orders => Set<Order>();
-
         public DbSet<OrderLine> OrderLines => Set<OrderLine>();
-
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,8 +28,6 @@ namespace WebShop.Infra.Persistence
 
             // Call your combined configuration
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-           // modelBuilder.ApplyConfiguration(new OrderConfig());
-           // modelBuilder.ApplyConfiguration(new OrderLineConfig());
 
         }
 

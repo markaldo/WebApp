@@ -19,20 +19,27 @@ namespace WebShop.Infra.Repositories
         {
             _context = context;
         }
-        //public async Task AddAsync(Order order)
-        //{
-        //    await _context.Orders.AddAsync(order);
-        //}
 
-        //public void  DeleteAsync(int id)
-        //{
-        //    var order = _context.Orders.Where(o => o.Id == id);
-        //    if (order != null)
-        //    {
-        //        _context.Orders.Remove(order);
-        //    }
+        public async Task<int> CreateOrderAsync(Order order, IEnumerable<CartItem> cartItems)
+        {
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
 
-        //}
+            foreach (var item in cartItems)
+            {
+                _context.OrderLines.Add(new OrderLine
+                {
+                    OrderId = order.Id,
+                    ProductId = item.Product.Id,
+                    Product = item.Product,
+                    Quantity = item.Quantity,
+                    SubTotal = item.LineTotal
+                });
+            }
+
+            await _context.SaveChangesAsync();
+            return order.Id;
+        }
 
         public async Task<IEnumerable<Order>> GetAllAsync()
         {
@@ -42,7 +49,7 @@ namespace WebShop.Infra.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Order?> GetByIdAsync(int id)
+        public async Task<Order?> GetOrderByIdAsync(int id)
         {
             return await _context.Orders
                .Include(o => o.OrderLines)
@@ -51,16 +58,14 @@ namespace WebShop.Infra.Repositories
 
         }
 
-        //public async Task SaveChangesAsync()
-        //{
-        //    await _context.SaveChangesAsync();
-        //}
-
-        //public void UpdateAsync(Order order)
-        //{
-        //    _context.Orders.Update(order);
-            
-            
-        //}
+        public async Task<IEnumerable<Order>> GetUserOrdersAsync(string userId)
+        {
+            return await _context.Orders
+                .Include(o => o.OrderLines)
+                    .ThenInclude(oi => oi.Product)
+                .Where(o => o.UserId == userId)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+        }
     }
 }
