@@ -69,6 +69,15 @@ namespace WebShop.Infra.Services
 
             await SetDefaultAddressAsync(address.Id, address.UserId);
         }
+
+        public async Task UpdateAddressAsync(Address address)
+        {
+            if (address == null) throw new ArgumentNullException(nameof(address));
+
+            _context.Addresses.Update(address);
+            await _context.SaveChangesAsync();
+        }
+
     }
 
 }

@@ -50,6 +50,7 @@ namespace WebShop.MVC.Models
         public List<SelectListItem> SavedAddresses { get; set; } = new();
         public int? SelectedAddressId { get; set; }
         public bool SaveAddress { get; set; }
+            public bool HasSavedAddress { get; set; }
         public string AddressName { get; set; } = "Home"; // "Work", "Home", etc.
 
         // Order summary (populated by controller)

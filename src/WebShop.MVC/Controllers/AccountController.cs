@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebShop.Infra.DependencyInjection;
 using WebShop.Infra.Identity;
+using WebShop.Infra.Services;
 using WebShop.MVC.Models; // your view models (RegisterViewModel, LoginViewModel, ChangePasswordViewModel, ResetPasswordViewModel)
 
 namespace WebShop.MVC.Controllers
@@ -11,19 +13,19 @@ namespace WebShop.MVC.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IAddress _addressService;
 
         public AccountController(
             ILogger<AccountController> logger,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IAddress addressService)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _addressService = addressService;
         }
-
-        // GET: /Account/Index
-        //public IActionResult Account() => View();
 
         // GET: /Account/Account
         [Authorize]
@@ -34,17 +36,29 @@ namespace WebShop.MVC.Controllers
             if (user == null)
                 return RedirectToAction("Login");
 
+            var userId = user.Id;
+            var userAddresses = await _addressService.GetUserAddressesAsync(userId);
+            var defaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
+
             var model = new AccountOverviewViewModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                Address = user.Addresses.FirstOrDefault().ToString()
+
+                AddressLine1 = defaultAddress?.AddressLine1 ?? "",
+                AddressLine2 = defaultAddress?.AddressLine2 ?? "",
+                City = defaultAddress?.City ?? "",
+                PostalCode = defaultAddress?.PostalCode ?? "",
+                Country = defaultAddress?.Country ?? "",
+                Phone = defaultAddress?.AdditionalInfo ?? user.PhoneNumber ?? "",
+                HasSavedAddress = defaultAddress != null
             };
 
             return View(model);
         }
+
         // POST: /Account/Account
         [Authorize]
         [HttpPost]
@@ -61,15 +75,37 @@ namespace WebShop.MVC.Controllers
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.DisplayName = model.DisplayName;
-            var newAddress = new Address
+
+            if (!string.IsNullOrEmpty(model.AddressLine1))
             {
-                UserId = user.Id,
-                LocationType = model.Address ?? "Home",
-            };
+                var userId = user.Id;
+                var userAddresses = await _addressService.GetUserAddressesAsync(userId);
+                var defaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
 
-            user.Addresses.Add(newAddress);
+                var address = defaultAddress ?? new Address
+                {
+                    UserId = userId,
+                    LocationType = "Home"
+                };
 
-            // If you want to allow changing email:
+                address.AddressLine1 = model.AddressLine1;
+                address.AddressLine2 = model.AddressLine2;
+                address.City = model.City;
+                address.PostalCode = model.PostalCode;
+                address.Country = model.Country;
+                address.AdditionalInfo = model.Phone; 
+
+                if (defaultAddress == null)
+                {
+                    address.IsDefault = true;
+                    await _addressService.SaveAddressAsync(address);
+                }
+                else
+                {
+                    await _addressService.UpdateAddressAsync(address);
+                }
+            }
+
             if (user.Email != model.Email)
             {
                 user.Email = model.Email;
@@ -86,14 +122,11 @@ namespace WebShop.MVC.Controllers
                 return View(model);
             }
 
-            // So updated info is reflected in the cookie (e.g. DisplayName)
             await _signInManager.RefreshSignInAsync(user);
 
             TempData["Message"] = "Account updated successfully.";
             return RedirectToAction(nameof(Account));
         }
-
-
 
         // GET: /Account/Login
         [HttpGet]
@@ -145,6 +178,8 @@ namespace WebShop.MVC.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
+
+            Console.WriteLine("The email is : " + model.Email);
 
             var user = new ApplicationUser
             {

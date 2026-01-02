@@ -13,5 +13,7 @@ namespace WebShop.Infra.DependencyInjection
         Task<Address?> GetAddressByIdAsync(int addressId, string userId);
         Task<int> SaveAddressAsync(Address address);
         Task SetDefaultAddressAsync(int addressId, string userId);
+        Task UpdateAddressAsync(Address address);
     }
+
 }

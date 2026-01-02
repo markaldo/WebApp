@@ -16,20 +16,13 @@
             <p>
                 @if (Model.Address != null)
                 {
-                    @Model.Address.AddressLine1
-                
-                    <br>
+                    <em>@Model.Address.AddressLine1</em>
                     @if (!string.IsNullOrEmpty(Model.Address.AddressLine2))
                     {
-                        @Model.Address.AddressLine2
-                
-                        <br>
+                        @Model.Address.AddressLine2 <br />
                     }
-                        @Model.Address.City
-                        @Model.Address.PostalCode<br>
+                        @($"{Model.Address.City} {Model.Address.PostalCode}") <br />
                         @Model.Address.Country<br>
-                        @Model.Address.AdditionalInfo<br> 
-                        < small > @Model.Address.LocationType Address </ small >
                     }
                 else if (Model.GuestAddress != null)
                 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -24,21 +25,21 @@ namespace WebShop.MVC.Controllers
         private readonly IWishlistService _wishlistService;
         private readonly IOrderRepository _orderService;
         private readonly IAddress _addressService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ShopController(ILogger<ShopController> logger, IShoppingCartService cartService, IWishlistService wishlistService /*, IProductService products*/, IOrderRepository orderService, IAddress addressService)
+        public ShopController(UserManager<ApplicationUser> userManager, ILogger<ShopController> logger, IShoppingCartService cartService, IWishlistService wishlistService, IOrderRepository orderService, IAddress addressService)
         {
             _logger = logger;
             _cartService = cartService;
             _wishlistService = wishlistService;
             _orderService = orderService;
             _addressService = addressService;
-            // _products = products;
+            _userManager = userManager;
         }
 
         // [HttpGet]
         public IActionResult ProductDetails()
         {
-            // var model = _products.GetFeaturedOrAll();
             return View();
         }
 
@@ -277,16 +278,49 @@ namespace WebShop.MVC.Controllers
             var cartItems = await _cartService.GetCartItemsAsync();
             if (!cartItems.Any()) return RedirectToAction("Cart");
 
-            ViewBag.OrderTotal = await _cartService.GetTotalAsync();  
-            ViewBag.CartItems = cartItems;                            
+            ViewBag.OrderTotal = await _cartService.GetTotalAsync();
+            ViewBag.CartItems = cartItems;
 
             var model = new CheckoutViewModel
             {
                 OrderTotal = (decimal)ViewBag.OrderTotal,
                 ItemCount = cartItems.Sum(i => i.Quantity)
             };
-            return View(model); 
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user != null)
+                    {
+                        model.Email = user.Email ?? string.Empty;
+                        model.FirstName = user.FirstName ?? string.Empty;
+                        model.LastName = user.LastName ?? string.Empty;
+                        model.Phone = user.PhoneNumber ?? string.Empty;
+                    }
+
+                    var userAddresses = await _addressService.GetUserAddressesAsync(userId);
+                    var defaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
+
+                    if (defaultAddress != null)
+                    {
+                        model.HasSavedAddress = true;
+                        model.AddressLine1 = defaultAddress.AddressLine1;
+                        model.AddressLine2 = defaultAddress.AddressLine2 ?? string.Empty;
+                        model.City = defaultAddress.City;
+                        model.PostalCode = defaultAddress.PostalCode;
+                        model.Country = defaultAddress.Country;
+                        model.AdditionalInfo = defaultAddress.AdditionalInfo;
+                    }
+                }
+            }
+
+            return View(model);
         }
+
 
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -332,22 +366,21 @@ namespace WebShop.MVC.Controllers
             }
             else
             {
-                if (!string.IsNullOrEmpty(userId))
-                {
-                    var userAddresses = await _addressService.GetUserAddressesAsync(userId);
-                    Address? defaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
+                // logged in user
+                var userAddresses = await _addressService.GetUserAddressesAsync(userId);
+                var defaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
 
-                    if (defaultAddress == null)
-                    {
-                        defaultAddress = CreateAddressFromModel(model, userId);
-                        await _addressService.SaveAddressAsync(defaultAddress);
-                    }
-                    else if (model.SaveAddress)
-                    {
-                        var newAddress = CreateAddressFromModel(model, userId);
-                        newAddress.IsDefault = false;
-                        await _addressService.SaveAddressAsync(newAddress);
-                    }
+                if (defaultAddress == null)
+                {
+                    var address = CreateAddressFromModel(model, userId);
+                    address.IsDefault = true;
+                    await _addressService.SaveAddressAsync(address);
+                }
+                else if (model.SaveAddress && !model.HasSavedAddress)
+                {
+                    var newAddress = CreateAddressFromModel(model, userId);
+                    newAddress.IsDefault = false;
+                    await _addressService.SaveAddressAsync(newAddress);
                 }
             }
 
@@ -377,7 +410,7 @@ namespace WebShop.MVC.Controllers
                 City = model.City,
                 PostalCode = model.PostalCode,
                 Country = model.Country,
-                AdditionalInfo = model.AdditionalInfo ?? "",
+                AdditionalInfo = model.AdditionalInfo ?? string.Empty,
                 IsDefault = true
             };
         }

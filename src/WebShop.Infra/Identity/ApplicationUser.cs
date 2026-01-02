@@ -10,12 +10,10 @@ namespace WebShop.Infra.Identity
     public class ApplicationUser : IdentityUser 
     {
         public string DisplayName { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public string? FirstName { get; set; } = string.Empty;
+        public string? LastName { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
-        public required string Email { get; set; } = string.Empty;
         public bool IsVendor { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
     }
 }

@@ -10,11 +10,11 @@
     });
 
     function initCartControls() {
-        $(document).off('click', '.qty-up, .qty-down, .delete-cart-item');
-        $(document).off('submit', '.qty-form');
-        $(document).on('click', '.qty-up, .qty-down', handleQuantityChange);
-        $(document).on('submit', '.qty-form', handleQuantitySubmit);
-        $(document).on('click', '.delete-cart-item', handleDeleteItem);
+        $(document).off('click', '.cart-page .qty-up, .qty-down, .delete-cart-item');
+        $(document).off('submit', '.cart-page .qty-form');
+        $(document).on('click', '.cart-page .qty-up, .qty-down', handleQuantityChange);
+        $(document).on('submit', '.cart-page .qty-form', handleQuantitySubmit);
+        $(document).on('click', '.cart-page .delete-cart-item', handleDeleteItem);
     }
 
     function handleQuantityChange(e) {
