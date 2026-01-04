@@ -31,6 +31,4 @@ namespace WebShop.Infra.Persistence.Configuration
             builder.HasIndex(a => new { a.UserId, a.IsDefault });
         }
     }
-
-
 }

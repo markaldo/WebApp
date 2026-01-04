@@ -157,6 +157,25 @@ namespace WebShop.MVC.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginCheckout(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = "Invalid login data" });
+
+            var result = await _signInManager.PasswordSignInAsync(
+                model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
+
+            if (result.Succeeded)
+                return Json(new { success = true, message = "Login successful!" });
+
+            if (result.IsLockedOut)
+                return Json(new { success = false, message = "Account locked. Try again later." });
+
+            return Json(new { success = false, message = "Invalid login attempt." });
+        }
+
         //Post: /Account/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -164,7 +183,6 @@ namespace WebShop.MVC.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
-            //return RedirectToAction("Login", "Account");
         }
 
         // GET: /Account/Register

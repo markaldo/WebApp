@@ -17,20 +17,20 @@
         $(document).on('click', '.cart-page .delete-cart-item', handleDeleteItem);
     }
 
-    function handleQuantityChange(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
+    //function handleQuantityChange(e) {
+    //    e.preventDefault();
+    //    e.stopImmediatePropagation();
 
-        const $btn = $(this);
-        const $form = $btn.closest('.qty-form');
-        const $qtyInput = $form.find('.qty-val');
-        const currentQty = parseInt($qtyInput.val()) || 1;
-        const direction = parseInt($btn.data('direction'));
-        const newQty = Math.max(1, currentQty + direction);
+    //    const $btn = $(this);
+    //    const $form = $btn.closest('.qty-form');
+    //    const $qtyInput = $form.find('.qty-val');
+    //    const currentQty = parseInt($qtyInput.val()) || 1;
+    //    const direction = parseInt($btn.data('direction'));
+    //    const newQty = Math.max(1, currentQty + direction);
 
-        $qtyInput.val(newQty);
-        $form.trigger('submit');
-    }
+    //    $qtyInput.val(newQty);
+    //    $form.trigger('submit');
+    //}
 
     function handleQuantitySubmit(e) {
         e.preventDefault();

@@ -9,10 +9,9 @@ namespace WebShop.Core.Repositories
 {
     public interface IOrderRepository
     {
-        Task<Order?> GetOrderByIdAsync(int orderId); // Get one order by Id
-        Task<IEnumerable<Order>> GetAllAsync(); //Get all orders
+        Task<Order?> GetOrderByIdAsync(int orderId); 
+        Task<IEnumerable<Order>> GetAllAsync(); 
         Task<int> CreateOrderAsync(Order order, IEnumerable<CartItem> cartItems);
         Task<IEnumerable<Order>> GetUserOrdersAsync(string userId);
-
     }
 }

@@ -16,5 +16,4 @@ namespace WebShop.Core.Entities
         public string Phone { get; set; } = string.Empty;
         public string AdditionalInfo { get; set; } = string.Empty; 
     }
-
 }

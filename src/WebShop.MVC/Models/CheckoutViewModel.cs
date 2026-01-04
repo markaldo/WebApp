@@ -5,7 +5,6 @@ namespace WebShop.MVC.Models
 {
     public class CheckoutViewModel
     {
-        // Billing/Shipping Information
         [Required(ErrorMessage = "First name is required")]
         [Display(Name = "First Name")]
         public string FirstName { get; set; } = string.Empty;
@@ -42,15 +41,13 @@ namespace WebShop.MVC.Models
         [Display(Name = "Country")]
         public string Country { get; set; } = "Poland";
         public string? AdditionalInfo { get; set; } = string.Empty;
-
-        // Guest vs Logged-in user handling
         public bool IsGuest { get; set; } = true;
 
         // Address management 
         public List<SelectListItem> SavedAddresses { get; set; } = new();
         public int? SelectedAddressId { get; set; }
         public bool SaveAddress { get; set; }
-            public bool HasSavedAddress { get; set; }
+        public bool HasSavedAddress { get; set; }
         public string AddressName { get; set; } = "Home"; // "Work", "Home", etc.
 
         // Order summary (populated by controller)

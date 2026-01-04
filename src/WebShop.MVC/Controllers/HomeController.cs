@@ -58,7 +58,6 @@ namespace WebShop.MVC.Controllers
                 });
             }
 
-
             var viewModel = new HomeViewModel()
             {
                 Products = products,

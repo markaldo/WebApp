@@ -59,7 +59,10 @@ namespace WebShop.Infra.Services
         public Task ClearWishlistAsync()
         {
             var context = _httpContextAccessor.HttpContext;
-            context.Response.Cookies.Delete(WISHLIST_ITEMS_KEY);
+            if (context != null)
+            {
+                context.Response.Cookies.Delete(WISHLIST_ITEMS_KEY);
+            }
             return Task.CompletedTask;
         }
 
@@ -72,6 +75,10 @@ namespace WebShop.Infra.Services
         private Dictionary<int, bool> GetWishlistIds()
         {
             var context = _httpContextAccessor.HttpContext;
+            if (context == null)
+            {
+                return new Dictionary<int, bool>();
+            }
             if (context.Request.Cookies.TryGetValue(WISHLIST_ITEMS_KEY, out var cookieValue))
             {
                 try
@@ -90,6 +97,10 @@ namespace WebShop.Infra.Services
         private void SaveWishlistIds(Dictionary<int, bool> ids)
         {
             var context = _httpContextAccessor.HttpContext;
+            if (context == null)
+            {
+                return;
+            }
             var json = JsonSerializer.Serialize(ids);
 
             context.Response.Cookies.Append(WISHLIST_ITEMS_KEY, json, new CookieOptions

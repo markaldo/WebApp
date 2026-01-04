@@ -54,7 +54,6 @@ namespace WebShop.MVC.Controllers
             return Json(new
             {
                 success = true,
-                // totalItems = totalItems,
                 totalPrice = totalPrice.ToString("C")
             });
         }
@@ -67,8 +66,6 @@ namespace WebShop.MVC.Controllers
             return View(items);
         }
 
-        // POST: /Shop/Cart/Update
-        // [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> UpdateCart(int productId, int quantity)
         {
@@ -91,8 +88,6 @@ namespace WebShop.MVC.Controllers
             });
         }
 
-        // POST: /Shop/Cart/Remove
-        //[ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> RemoveFromCart(int productId)
         {
@@ -131,7 +126,7 @@ namespace WebShop.MVC.Controllers
         private string GenerateCartDropdownHtml(IEnumerable<CartItem> items, decimal total)
         {
             var html = "";
-            foreach (var item in items.Take(3)) // Show max 3 items
+            foreach (var item in items.Take(3)) 
             {
                 html += $@"
             <li>
@@ -163,7 +158,6 @@ namespace WebShop.MVC.Controllers
             return ViewComponent("CartHeader");
         }
 
-        // GET: /Shop/Wishlist
         public async Task<IActionResult> Wishlist()
         {
             var items = await _wishlistService.GetWishlistAsync();
@@ -270,8 +264,6 @@ namespace WebShop.MVC.Controllers
             return Json(new { count });
         }
 
-        // Checkout Section
-
         [HttpGet]
         public async Task<IActionResult> Checkout()
         {
@@ -321,8 +313,6 @@ namespace WebShop.MVC.Controllers
             return View(model);
         }
 
-
-
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Checkout(CheckoutViewModel model)
         {
@@ -366,7 +356,6 @@ namespace WebShop.MVC.Controllers
             }
             else
             {
-                // logged in user
                 var userAddresses = await _addressService.GetUserAddressesAsync(userId);
                 var defaultAddress = userAddresses.FirstOrDefault(a => a.IsDefault);
 

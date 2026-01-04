@@ -31,32 +31,6 @@
                 <tbody>
                 @foreach (var item in Model)
                 {
-                    @* <tr>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                @if (!string.IsNullOrEmpty(item.ImageUrl))
-                                {
-                                    <img src="~/assets/imgs/shop/@item.ImageUrl" alt="@item.ProductName"
-                                         style="width:60px;height:60px;object-fit:cover;" class="me-2" />
-                                }
-                                <span>@item.ProductName</span>
-                            </div>
-                        </td>
-                        <td>@item.Price.ToString("C")</td>
-                        <td>
-                            <form class="d-inline">
-                                <button type="button" class="btn btn-sm btn-success move-to-cart-btn" data-product-id="@item.ProductId">
-                                    Add to Cart
-                                </button>
-                            </form>
-                            <form class="d-inline">
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-wishlist-btn" data-product-id="@item.ProductId">
-                                    Remove
-                                </button>
-                            </form>
-                        </td>
-                    </tr> *@
-
                     <tr class="pt-30">
                         <td class="custome-checkbox pl-30">
                             <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
@@ -78,7 +52,7 @@
                             </div>
                         </td>
                         <td class="price" data-title="Price">
-                            <h3 class="text-brand">@item.Price</h3>
+                            <h3 class="text-brand">$ @item.Price</h3>
                         </td>
                         <td class="text-center detail-info" data-title="Stock">
                             <span class="stock-status in-stock mb-0"> In Stock </span>
